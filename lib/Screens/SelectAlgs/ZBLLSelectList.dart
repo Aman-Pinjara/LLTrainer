@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/Models/ZBLLTileTypeModel.dart';
-import 'package:lltrainer/Utils/AlgSelectTile.dart';
+import 'package:lltrainer/Utils/CustomAppBar.dart';
 import 'package:lltrainer/Utils/ZBLLSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
+import 'package:lltrainer/my_colors.dart';
+import 'package:provider/provider.dart';
+
+import '../../MyProvider/LastLayerProvier.dart';
 
 class ZBLLSelectList extends StatelessWidget {
-  const ZBLLSelectList({Key? key}) : super(key: key);
+  final PageController controller;
+  const ZBLLSelectList({required this.controller, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,81 +24,30 @@ class ZBLLSelectList extends StatelessWidget {
       timesType.add(element);
     }
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 50.h,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Padding(
-          padding: EdgeInsets.only(top: 27.h, left: 19.w),
-          child: GestureDetector(
-            onTap: () {},
-            child: Text(
-              String.fromCharCode(Icons.arrow_back_rounded.codePoint),
-              style: TextStyle(
-                inherit: false,
-                color: Theme.of(context).primaryColorLight.withOpacity(1),
-                fontSize: 30.sp,
-                fontWeight: FontWeight.w900,
-                fontFamily: Icons.arrow_back_rounded.fontFamily,
-                package: Icons.arrow_back_rounded.fontPackage,
-              ),
-            ),
+      body: SafeArea(
+          child: CustomAppBar(
+        appBarColor: ZBLLTHEME,
+        titleText: "Select ZBLL",
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: Theme.of(context).colorScheme.onBackground),
+            onPressed: () {
+              if (controller.hasClients) {
+                controller.animateToPage(
+                  1,
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                );
+              }
+            }),
+        child: SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return ZBLLSelectTile(curlltype: timesType[index],);
+            },
+            childCount: timesType.length,
           ),
         ),
-      ),
-      body: SafeArea(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 20.h,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Expanded(
-                    child: Divider(
-                  thickness: 2,
-                  color: Colors.black,
-                )),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Select ZBLL",
-                    style:
-                        TextStyle(fontSize: 40.sp, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const Expanded(
-                    child: Divider(
-                  thickness: 2,
-                  color: Colors.black,
-                )),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 12.h,
-          ),
-          Expanded(
-            child: Scrollbar(
-              thumbVisibility: true,
-              thickness: 5,
-              interactive: true,
-              radius: const Radius.circular(12),
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: timesType.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ZBLLSelectTile(curlltype: timesType[index]);
-                },
-              ),
-            ),
-          ),
-        ],
       )),
     );
   }

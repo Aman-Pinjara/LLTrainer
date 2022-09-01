@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:lltrainer/Screens/SelectAlgs/PllSelectList.dart';
+import 'package:lltrainer/Screens/SelectAlgs/llSelectList.dart';
 import 'package:lltrainer/Screens/SelectAlgs/ZBLLSelectList.dart';
 import 'package:provider/provider.dart';
 
 import '../../MyProvider/LastLayerProvier.dart';
 
 class Selection extends StatelessWidget {
-  const Selection({Key? key}) : super(key: key);
+  final PageController controller;
+  const Selection({required this.controller,Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     String ll = Provider.of<LastLayerProvider>(context).ll;
     switch (ll) {
       case "ZBLL":
-        return const ZBLLSelectList();
+        return ZBLLSelectList(controller: controller,);
       default:
-        return PllSelectList(ll: ll);
+        return llSelectList(ll: ll,controller: controller,);
     }
   }
 }

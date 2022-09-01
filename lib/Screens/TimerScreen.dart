@@ -31,9 +31,7 @@ class _TimerScreenState extends State<TimerScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? _Mode[curMode].withOpacity(0.5)
-                      : _Mode[curMode].withOpacity(1),
+                  color: _Mode[curMode].withOpacity(0.6),
                 ),
                 child: SizedBox(
                   width: double.infinity,

@@ -7,7 +7,8 @@ import 'package:lltrainer/Screens/StatsDetail.dart';
 import 'package:lltrainer/my_colors.dart';
 
 class StatsChoose extends StatelessWidget {
-  const StatsChoose({Key? key}) : super(key: key);
+  final PageController controller;
+  const StatsChoose({required this.controller, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +57,15 @@ class StatsChoose extends StatelessWidget {
               top: 27.h,
               left: 19.w,
               child: GestureDetector(
+                onTap: () {
+                  if (controller.hasClients) {
+                    controller.animateToPage(
+                      1,
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                },
                 child: Text(
                   String.fromCharCode(Icons.arrow_back_rounded.codePoint),
                   style: TextStyle(
@@ -90,8 +100,7 @@ class StatsChoose extends StatelessWidget {
                           ll: ll,
                           llMode: color,
                           times: ll == "PLL" ? plltimes : olltimes,
-                      )
-                ),
+                        )),
               );
             },
             style: ButtonStyle(
@@ -110,7 +119,7 @@ class StatsChoose extends StatelessWidget {
               ll,
               style: TextStyle(
                   fontSize: 40.sp, color: Colors.white.withOpacity(1)),
-        )),
+            )),
       ),
     );
   }

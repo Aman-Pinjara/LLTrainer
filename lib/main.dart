@@ -44,9 +44,9 @@ class MyApp extends StatelessWidget {
           physics: dontScroll ? NeverScrollableScrollPhysics() : null,
           controller: _controller,
           children: [
-            Selection(),
+            Selection(controller: _controller,),
             TimerScreen(),
-            StatsChoose(),
+            StatsChoose(controller: _controller,),
           ],
         ),
       ),

@@ -31,6 +31,9 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
         },
         child: Container(
           decoration: BoxDecoration(
+            boxShadow:const [
+              BoxShadow(blurRadius: 1, color: Colors.black, offset: Offset(0,1), blurStyle: BlurStyle.normal),
+            ],
               borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -116,7 +116,7 @@ class StatsDetail extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => LLBasicStatList(ll: ll)));
+                    builder: (context) => LLBasicStatList(ll: ll,appbarcolor: llMode,)));
               },
               child: SizedBox(
                 height: 75.w,
