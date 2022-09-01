@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lltrainer/Models/llselectview.dart';
-import 'package:lltrainer/Utils/algselecttile.dart';
+import 'package:lltrainer/Models/LLSelectViewModel.dart';
+import 'package:lltrainer/Utils/AlgSelectTile.dart';
 import 'package:lltrainer/llnames/PLL.dart';
 
 import '../../llnames/COLL.dart';
 import '../../llnames/OLL.dart';
-import '../../llnames/ZBLL.dart';
 
-class PllSelect extends StatelessWidget {
+class PllSelectList extends StatelessWidget {
   final String ll;
-  const PllSelect({required this.ll,Key? key}) : super(key: key);
+  const PllSelectList({required this.ll, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    late final templist;
+    late final List<String> templist;
     switch (ll) {
       case "PLL":
         templist = PLLNAMES;

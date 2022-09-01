@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lltrainer/AlgLists/temptimelist.dart';
-import 'package:lltrainer/Screens/statsDetail.dart';
+import 'package:lltrainer/Screens/StatsDetail.dart';
 import 'package:lltrainer/my_colors.dart';
 
-class StatesChoose extends StatelessWidget {
-  const StatesChoose({Key? key}) : super(key: key);
+class StatsChoose extends StatelessWidget {
+  const StatsChoose({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,9 @@ class StatesChoose extends StatelessWidget {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 37.w,),
+                    padding: EdgeInsets.only(
+                      left: 37.w,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -31,7 +33,8 @@ class StatesChoose extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 30.sp,
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColor.withOpacity(1),
+                            color:
+                                Theme.of(context).primaryColor.withOpacity(1),
                           ),
                         ),
                         SizedBox(
@@ -79,25 +82,35 @@ class StatesChoose extends StatelessWidget {
         width: double.infinity,
         height: 80.h,
         child: TextButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => StatesDetail(ll: ll,llMode: color,times: ll=="PLL"? plltimes:olltimes,)),
-            );
-          },
-          style: ButtonStyle(
-            alignment: Alignment.center,
-            elevation: MaterialStateProperty.all(3),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => StatsDetail(
+                          ll: ll,
+                          llMode: color,
+                          times: ll == "PLL" ? plltimes : olltimes,
+                      )
+                ),
+              );
+            },
+            style: ButtonStyle(
+              alignment: Alignment.center,
+              elevation: MaterialStateProperty.all(3),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
               ),
+              side: MaterialStateProperty.all(BorderSide(
+                  color: Colors.black.withOpacity(0.35), width: 0.3)),
+              backgroundColor: MaterialStateProperty.all(color),
             ),
-            side: MaterialStateProperty.all(BorderSide(color: Colors.black.withOpacity(0.35), width: 0.3)),
-            backgroundColor: MaterialStateProperty.all(color),
-          ), 
-          child: Text(ll, style: TextStyle(fontSize: 40.sp, color: Colors.white.withOpacity(1)),)
-        ),
+            child: Text(
+              ll,
+              style: TextStyle(
+                  fontSize: 40.sp, color: Colors.white.withOpacity(1)),
+        )),
       ),
     );
   }

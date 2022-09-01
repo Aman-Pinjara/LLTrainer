@@ -2,12 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lltrainer/myProvider.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
 
+import '../MyProvider/LastLayerProvier.dart';
+import '../MyProvider/LockScrollProvier.dart';
+
 class TimerScreen extends StatefulWidget {
-  TimerScreen({Key? key}) : super(key: key);
+  const TimerScreen({Key? key}) : super(key: key);
   @override
   State<TimerScreen> createState() => _TimerScreenState();
 }

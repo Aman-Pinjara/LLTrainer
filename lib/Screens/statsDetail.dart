@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lltrainer/Screens/allalgstats.dart';
+import 'package:lltrainer/Screens/LLBasicStatList.dart';
 import 'package:lltrainer/my_colors.dart';
 
-class StatesDetail extends StatelessWidget {
+class StatsDetail extends StatelessWidget {
   final String ll;
   final Color llMode;
   final List<String> times;
-  const StatesDetail(
+  const StatsDetail(
       {required this.llMode, required this.times, required this.ll, Key? key})
       : super(key: key);
 
@@ -41,7 +41,7 @@ class StatesDetail extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: Column(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -61,10 +61,10 @@ class StatesDetail extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
-                  ll,
-                  style:
-                      TextStyle(fontSize: 40.sp, fontWeight: FontWeight.bold),
-                ),
+                    ll,
+                    style:
+                        TextStyle(fontSize: 40.sp, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Expanded(
                     child: Divider(
@@ -115,8 +115,8 @@ class StatesDetail extends StatelessWidget {
                 )),
             child: InkWell(
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => llDetail(ll: ll)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => LLBasicStatList(ll: ll)));
               },
               child: SizedBox(
                 height: 75.w,
@@ -138,7 +138,7 @@ class StatesDetail extends StatelessWidget {
             ),
           ),
         ],
-            )),
+      )),
     );
   }
 

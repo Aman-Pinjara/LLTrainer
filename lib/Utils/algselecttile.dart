@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lltrainer/Models/llselectview.dart';
-import 'package:lltrainer/Models/llstatsview.dart';
+import 'package:lltrainer/Models/LLSelectViewModel.dart';
+import 'package:lltrainer/Models/LLViewModel.dart';
 import 'package:lltrainer/my_colors.dart';
 
 class AlgSelectTile extends StatefulWidget {

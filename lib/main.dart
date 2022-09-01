@@ -2,22 +2,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lltrainer/Screens/SelectAlgs/pllselect.dart';
-import 'package:lltrainer/Screens/SelectAlgs/select.dart';
-import 'package:lltrainer/Screens/statschoose.dart';
+import 'package:lltrainer/Screens/SelectAlgs/PllSelectList.dart';
+import 'package:lltrainer/Screens/SelectAlgs/Selection.dart';
+import 'package:lltrainer/Screens/StatsChoose.dart';
 import 'package:lltrainer/custom_theme.dart';
-import 'package:lltrainer/Screens/timer_screen.dart';
-import 'package:lltrainer/myProvider.dart';
+import 'package:lltrainer/Screens/TimerScreen.dart';
 import 'package:provider/provider.dart';
+
+import 'MyProvider/LastLayerProvier.dart';
+import 'MyProvider/LockScrollProvier.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => LockScrollProvider()),
-      ChangeNotifierProvider(create: (_) => LastLayerProvider())
-    ],
-    child: const MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => LockScrollProvider()),
+    ChangeNotifierProvider(create: (_) => LastLayerProvider())
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
           children: [
             Selection(),
             TimerScreen(),
-            StatesChoose(),
+            StatsChoose(),
           ],
         ),
       ),

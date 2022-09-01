@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lltrainer/Models/llselectview.dart';
-import 'package:lltrainer/Models/zblltypetilemodel.dart';
-import 'package:lltrainer/Utils/algselecttile.dart';
+import 'package:lltrainer/Models/LLSelectViewModel.dart';
+import 'package:lltrainer/Models/ZBLLTileTypeModel.dart';
+import 'package:lltrainer/Utils/AlgSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lltrainer/Screens/SelectAlgs/pllselect.dart';
-import 'package:lltrainer/Screens/SelectAlgs/zbllselect.dart';
+import 'package:lltrainer/Screens/SelectAlgs/PllSelectList.dart';
+import 'package:lltrainer/Screens/SelectAlgs/ZBLLSelectList.dart';
 import 'package:provider/provider.dart';
 
-import '../../myProvider.dart';
+import '../../MyProvider/LastLayerProvier.dart';
 
 class Selection extends StatelessWidget {
   const Selection({Key? key}) : super(key: key);
@@ -13,9 +13,9 @@ class Selection extends StatelessWidget {
     String ll = Provider.of<LastLayerProvider>(context).ll;
     switch (ll) {
       case "ZBLL":
-        return const ZBLLSelect();
+        return const ZBLLSelectList();
       default:
-        return PllSelect(ll: ll);
+        return PllSelectList(ll: ll);
     }
   }
 }
