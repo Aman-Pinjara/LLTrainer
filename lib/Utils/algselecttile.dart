@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
-import 'package:lltrainer/Models/LLViewModel.dart';
-import 'package:lltrainer/my_colors.dart';
 
 class AlgSelectTile extends StatefulWidget {
   final LLSelectViewModel curll;
@@ -20,9 +17,9 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
   Widget build(BuildContext context) {
     final colorarr = [
       Theme.of(context).primaryColorDark,
-      LEARNING,
-      LEARNED,
-      NOLEARN
+      Theme.of(context).colorScheme.tertiaryContainer,
+      Theme.of(context).colorScheme.primaryContainer,
+      Theme.of(context).colorScheme.secondaryContainer,
     ];
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),

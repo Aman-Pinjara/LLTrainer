@@ -20,11 +20,10 @@ class _TimerScreenState extends State<TimerScreen> {
   final _Mode = [PLLTHEME, OLLTHEME, COLLTHEME, ZBLLTHEME];
   final _ModeName = ["PLL", "OLL", "COLL", "ZBLL"];
   bool isLock = false;
-
-  int curMode = 0;
-
   @override
   Widget build(BuildContext context) {
+    int curMode = Provider.of<LastLayerProvider>(context).curMode;
+    String ll = Provider.of<LastLayerProvider>(context).ll;
     return Scaffold(
       body: SafeArea(
         child: Stack(children: [
@@ -32,7 +31,7 @@ class _TimerScreenState extends State<TimerScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: PHONETHEME == ThemeMode.light
+                  color: Theme.of(context).brightness == Brightness.light
                       ? _Mode[curMode].withOpacity(0.5)
                       : _Mode[curMode].withOpacity(1),
                 ),
@@ -168,7 +167,7 @@ class _TimerScreenState extends State<TimerScreen> {
                         curMode = (curMode + 1) % _Mode.length;
                       }
                       Provider.of<LastLayerProvider>(context, listen: false)
-                          .changeLL(_ModeName[curMode]);
+                          .changeLL(_ModeName[curMode], curMode);
                     });
                   },
                   child: SizedBox(
@@ -176,7 +175,7 @@ class _TimerScreenState extends State<TimerScreen> {
                     width: double.infinity,
                     child: Center(
                         child: Text(
-                      _ModeName[curMode],
+                      ll,
                       style: TextStyle(
                         fontSize: 45.sp,
                         fontWeight: FontWeight.bold,

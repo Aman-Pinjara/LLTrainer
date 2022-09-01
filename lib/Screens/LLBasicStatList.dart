@@ -101,6 +101,7 @@ class LLBasicStatList extends StatelessWidget {
           ),
           Expanded(
             child: Scrollbar(
+              trackVisibility: true,
               thumbVisibility: true,
               thickness: 5,
               interactive: true,

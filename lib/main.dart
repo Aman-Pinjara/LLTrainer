@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, no_leading_underscores_for_local_identifiers, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lltrainer/Screens/SelectAlgs/PllSelectList.dart';
 import 'package:lltrainer/Screens/SelectAlgs/Selection.dart';
 import 'package:lltrainer/Screens/StatsChoose.dart';
 import 'package:lltrainer/custom_theme.dart';

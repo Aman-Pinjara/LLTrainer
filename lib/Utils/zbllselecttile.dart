@@ -5,7 +5,6 @@ import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/Models/ZBLLTileTypeModel.dart';
 import 'package:lltrainer/Utils/AlgSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
-import 'package:lltrainer/my_colors.dart';
 
 class ZBLLSelectTile extends StatefulWidget {
   final ZBLLTileTypeModel curlltype;
@@ -36,30 +35,45 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
     print(times);
     final colorarr = [
       Theme.of(context).primaryColorDark,
-      LEARNING,
-      LEARNED,
-      NOLEARN
+      Theme.of(context).colorScheme.tertiaryContainer,
+      Theme.of(context).colorScheme.primaryContainer,
+      Theme.of(context).colorScheme.secondaryContainer,
     ];
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
       child: GestureDetector(
-        onTap: () {
+        onDoubleTap: () {
           setState(() {
             i = (i + 1) % colorarr.length;
           });
         },
-        child: ExpansionTile(
-          backgroundColor: colorarr[i],
-          leading: SizedBox(
-            height: 50.h,
-            width: 50.h,
-            child: SvgPicture.asset(
-              widget.curlltype.img,
-              fit: BoxFit.cover,
-            ),
+        onTap: () {
+          
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 60.h,
+                width: 60.h,
+                child: SvgPicture.asset(
+                        widget.curlltype.img,
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Text(
+                  widget.curlltype.name,
+                  style:
+                      TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ),
-          title: Text(widget.curlltype.name),
-          children: [for (var index in times) AlgSelectTile(curll: index)],
         ),
       ),
     );
