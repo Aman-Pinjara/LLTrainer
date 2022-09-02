@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,6 +14,19 @@ class ZBLLTypeSelectTile extends StatefulWidget {
 }
 
 class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
+  late TextEditingController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.zb.alg);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   int i = 0;
   @override
   Widget build(BuildContext context) {
@@ -66,27 +79,7 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
                 padding: const EdgeInsets.all(10.0),
                 child: GestureDetector(
                   onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: ((context) {
-                          return SimpleDialog(
-                            title: Text("Enter new alg"),
-                            children: [
-                              TextFormField(),
-                              Row(
-                                children: [
-                                  TextButton(
-                                      onPressed: () {}, child: Text("Cancel")),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("OK")),
-                                ],
-                              )
-                            ],
-                          );
-                        }));
+                    AlgEditDialog(context);
                   },
                   child: SizedBox(
                     width: 125.w,
@@ -103,6 +96,46 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
           ),
         ),
       ),
+    );
+  }
+
+  void AlgEditDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: const Text("Enter new alg"),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextField(
+                autofocus: true,
+                controller: _controller,
+                cursorColor: Theme.of(context).colorScheme.onSecondary,
+                decoration: const InputDecoration(
+                  hintText: "Alg",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Cancel",style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),)),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK",style: TextStyle(color: Theme.of(context).colorScheme.onSecondary))),
+              ],
+            )
+          ],
+        );
+      },
     );
   }
 }

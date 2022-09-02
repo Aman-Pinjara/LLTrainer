@@ -13,6 +13,13 @@ class AlgSelectTile extends StatefulWidget {
 }
 
 class _AlgSelectTileState extends State<AlgSelectTile> {
+  late TextEditingController _controller;
+  @override
+  void initState() {
+    _controller = TextEditingController(text: widget.curll.alg);
+    super.initState();
+  }
+
   int i = 0;
   @override
   Widget build(BuildContext context) {
@@ -31,11 +38,13 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
           });
         },
         child: Container(
-          decoration: BoxDecoration(
-            boxShadow:const[
-              BoxShadow(blurRadius: 2, color: Colors.grey, offset: Offset(0,1), blurStyle: BlurStyle.normal),
-            ],
-              borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
+          decoration: BoxDecoration(boxShadow: const [
+            BoxShadow(
+                blurRadius: 2,
+                color: Colors.grey,
+                offset: Offset(0, 1),
+                blurStyle: BlurStyle.normal),
+          ], borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -43,9 +52,9 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
                 height: 60.h,
                 width: 60.h,
                 child: Image.asset(
-                        widget.curll.img,
-                        fit: BoxFit.cover,
-                      ),
+                  widget.curll.img,
+                  fit: BoxFit.cover,
+                ),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 12.w),
@@ -59,7 +68,7 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
                 padding: const EdgeInsets.all(10.0),
                 child: GestureDetector(
                   onTap: () {
-                    print("Tapped");
+                    AlgEditDialog(context);
                   },
                   child: SizedBox(
                     width: 125.w,
@@ -75,6 +84,46 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
           ),
         ),
       ),
+    );
+  }
+
+  void AlgEditDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: const Text("Enter new alg"),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: TextField(
+                autofocus: true,
+                controller: _controller,
+                cursorColor: Theme.of(context).colorScheme.onSecondary,
+                decoration: const InputDecoration(
+                  hintText: "Alg",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Cancel",style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),)),
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK",style: TextStyle(color: Theme.of(context).colorScheme.onSecondary))),
+              ],
+            )
+          ],
+        );
+      },
     );
   }
 }

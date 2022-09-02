@@ -100,7 +100,7 @@ class StatsChoose extends StatelessWidget {
                           ll: ll,
                           llMode: color,
                           times: ll == "PLL" ? plltimes : olltimes,
-                        )),
+                        ),),
               );
             },
             style: ButtonStyle(

@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors, must_be_immutable, camel_case_types
 
 import 'package:flutter/material.dart';
-import 'package:lltrainer/MyProvider/LastLayerProvier.dart';
-import 'package:provider/provider.dart';
+import 'package:lltrainer/Utils/ZBLLStatTile.dart';
 import 'package:lltrainer/Models/LLViewModel.dart';
 import 'package:lltrainer/Utils/AlgStatTile.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
@@ -10,13 +9,13 @@ import 'package:lltrainer/llnames/COLL.dart';
 import 'package:lltrainer/llnames/OLL.dart';
 import 'package:lltrainer/llnames/PLL.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
-import 'package:lltrainer/my_colors.dart';
 
 class LLBasicStatList extends StatelessWidget {
   final String ll;
   late List<LLViewModel> times;
   final Color appbarcolor;
-  LLBasicStatList({required this.appbarcolor,required this.ll, Key? key}) : super(key: key);
+  LLBasicStatList({required this.appbarcolor, required this.ll, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +32,7 @@ class LLBasicStatList extends StatelessWidget {
         templist = COLLNAMES;
         break;
       case "ZBLL":
-        templist = ZBLLNAMES;
+        templist = ZBLLNAMESTYPE;
         break;
       default:
         print("ll");
@@ -56,7 +55,9 @@ class LLBasicStatList extends StatelessWidget {
         child: SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return AlgStatTile(curll: times[index], isZB: isZB);
+              return isZB
+                  ? ZBLLStatTile(zbType: times[index])
+                  : AlgStatTile(curll: times[index]);
             },
             childCount: times.length,
           ),
