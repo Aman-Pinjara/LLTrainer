@@ -16,7 +16,7 @@ class AlgStatTile extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           boxShadow:const [
-              BoxShadow(blurRadius: 1, color: Colors.black, offset: Offset(0,1), blurStyle: BlurStyle.normal),
+              BoxShadow(blurRadius: 1, color: Colors.grey, offset: Offset(0,1), blurStyle: BlurStyle.normal),
             ],
             borderRadius: BorderRadius.circular(6.0),
             color: Theme.of(context).primaryColorDark),

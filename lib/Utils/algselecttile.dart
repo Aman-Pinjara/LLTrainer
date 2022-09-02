@@ -4,7 +4,8 @@ import 'package:lltrainer/Models/LLSelectViewModel.dart';
 
 class AlgSelectTile extends StatefulWidget {
   final LLSelectViewModel curll;
-  const AlgSelectTile({required this.curll, Key? key})
+  final Color color;
+  const AlgSelectTile({required this.color, required this.curll, Key? key})
       : super(key: key);
 
   @override
@@ -31,8 +32,8 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
         },
         child: Container(
           decoration: BoxDecoration(
-            boxShadow:const [
-              BoxShadow(blurRadius: 1, color: Colors.black, offset: Offset(0,1), blurStyle: BlurStyle.normal),
+            boxShadow:const[
+              BoxShadow(blurRadius: 2, color: Colors.grey, offset: Offset(0,1), blurStyle: BlurStyle.normal),
             ],
               borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
           child: Row(

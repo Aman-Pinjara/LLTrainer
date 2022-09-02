@@ -3,8 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/Models/ZBLLTileTypeModel.dart';
-import 'package:lltrainer/Utils/AlgSelectTile.dart';
+import 'package:lltrainer/Utils/ZBLLTypeSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
+import 'package:lltrainer/my_colors.dart';
 
 class ZBLLSelectTile extends StatefulWidget {
   final ZBLLTileTypeModel curlltype;
@@ -32,7 +33,6 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
       }
       if (conout) break;
     }
-    print(times);
     final colorarr = [
       Theme.of(context).primaryColorDark,
       Theme.of(context).colorScheme.tertiaryContainer,
@@ -48,34 +48,90 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
           });
         },
         onTap: () {
-          
+          dialog(context, times);
         },
         child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 60.h,
-                width: 60.h,
-                child: SvgPicture.asset(
-                        widget.curlltype.img,
-                        fit: BoxFit.cover,
-                      ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Text(
-                  widget.curlltype.name,
-                  style:
-                      TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
+          decoration: BoxDecoration(boxShadow: const [
+            BoxShadow(
+                blurRadius: 1,
+                color: Colors.grey,
+                offset: Offset(0, 1),
+                blurStyle: BlurStyle.normal),
+          ], borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: 60.h,
+                  width: 60.h,
+                  child: SvgPicture.asset(
+                    widget.curlltype.img,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Text(
+                    widget.curlltype.name,
+                    style:
+                        TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const Icon(Icons.arrow_forward_ios_rounded)
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void dialog(BuildContext context, List<LLSelectViewModel> times) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r)),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.h),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(Icons.close, color: ZBLLTHEME,)),
+                        Text(
+                          widget.curlltype.name,
+                          style: TextStyle(
+                              fontSize: 17.sp, fontWeight: FontWeight.w500,),
+                        ),
+                      ],
+                    ),
+                    Expanded(
+                      child: RawScrollbar(
+                        thumbColor: ZBLLTHEME,
+                        thumbVisibility: true,
+                        radius: const Radius.circular(5),
+                        thickness: 6,
+                        child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: times.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ZBLLTypeSelectTile(zb: times[index]);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ));
+        });
   }
 }

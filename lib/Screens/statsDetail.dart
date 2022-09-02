@@ -78,19 +78,23 @@ class StatsDetail extends StatelessWidget {
             height: 12.h,
           ),
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.w),
-              child: GridView.builder(
-                physics: BouncingScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: 10.h,
-                  crossAxisSpacing: 10.w,
-                  crossAxisCount: 5,
+            child: RawScrollbar(
+              interactive: true,
+              thumbColor: llMode,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40.w),
+                child: GridView.builder(
+                  physics: BouncingScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    mainAxisSpacing: 10.h,
+                    crossAxisSpacing: 10.w,
+                    crossAxisCount: 5,
+                  ),
+                  itemCount: times.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return TimesTile(times[index], context);
+                  },
                 ),
-                itemCount: times.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return TimesTile(times[index], context);
-                },
               ),
             ),
           ),
@@ -116,7 +120,10 @@ class StatsDetail extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => LLBasicStatList(ll: ll,appbarcolor: llMode,)));
+                    builder: (context) => LLBasicStatList(
+                          ll: ll,
+                          appbarcolor: llMode,
+                        )));
               },
               child: SizedBox(
                 height: 75.w,

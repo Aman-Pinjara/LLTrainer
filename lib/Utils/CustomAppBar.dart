@@ -19,7 +19,9 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Scrollbar(
+      body: RawScrollbar(
+        radius: Radius.circular(5),
+        thumbColor: appBarColor,
         thumbVisibility: true,
         interactive: true,
         child: CustomScrollView(
@@ -31,7 +33,7 @@ class CustomAppBar extends StatelessWidget {
               pinned: true,
               expandedHeight: 130.h,
               flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
+                // centerTitle: true,
                 title: Text(
                   titleText,
                   style: TextStyle(
@@ -41,9 +43,9 @@ class CustomAppBar extends StatelessWidget {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage('assets/cubeabstract.jpg'),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitWidth,
                           colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.5),
+                              Colors.black.withOpacity(0.3),
                               BlendMode.dstATop))),
                 ),
               ),

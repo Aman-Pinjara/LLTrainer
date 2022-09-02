@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,7 +31,7 @@ class _TimerScreenState extends State<TimerScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: _Mode[curMode].withOpacity(0.6),
+                  color: _Mode[curMode],
                 ),
                 child: SizedBox(
                   width: double.infinity,
@@ -43,10 +43,9 @@ class _TimerScreenState extends State<TimerScreen> {
                         textAlign: TextAlign.center,
                         pllScramble,
                         style: TextStyle(
-                          color: Theme.of(context)
-                              .scaffoldBackgroundColor
-                              .withOpacity(1),
+                          color: Theme.of(context).colorScheme.onPrimary,
                           fontSize: 17.5.sp,
+                          fontWeight: FontWeight.w500
                         ),
                       ),
                     ),
@@ -69,52 +68,41 @@ class _TimerScreenState extends State<TimerScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(10.h),
+                      padding: EdgeInsets.symmetric(vertical: 3.h),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                "+2",
-                                style: TextStyle(
-                                  fontSize: 17.sp,
-                                  color: _Mode[curMode].withOpacity(1),
-                                ),
-                              )),
-                          SizedBox(
-                            width: 12.w,
-                          ),
-                          TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                "DNF",
-                                style: TextStyle(
-                                  fontSize: 17.sp,
-                                  color: _Mode[curMode].withOpacity(1),
-                                ),
-                              )),
-                          SizedBox(
-                            width: 12.w,
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.delete,
-                              color: _Mode[curMode].withOpacity(1),
-                              size: 20.sp,
-                            ),
-                          ),
+                          Text("Avg 5 :", style: TextStyle(color: _Mode[curMode], fontSize: 17.sp, fontWeight: FontWeight.w500),),
+                          Text("12.56", style: TextStyle(color: _Mode[curMode], fontSize: 17.sp, fontWeight: FontWeight.w500),),
                         ],
-                      ),
+                      )
                     ),
                     Padding(
-                      padding: EdgeInsets.only(
-                        top: 30.h,
-                      ),
-                      child: SizedBox(
-                        width: 94.w,
-                        child: TextButton(
+                      padding: EdgeInsets.symmetric(vertical: 3.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Avg :", style: TextStyle(color: _Mode[curMode], fontSize: 17.sp, fontWeight: FontWeight.w500),),
+                          Text("12.56", style: TextStyle(color: _Mode[curMode], fontSize: 17.sp, fontWeight: FontWeight.w500),),
+                        ],
+                      )
+                    ),
+                    SizedBox(height: 20.h,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.delete,
+                            color: _Mode[curMode],
+                            size: 20.sp,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 12.w,
+                        ),
+                        TextButton(
                           onPressed: () {},
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all<
@@ -137,7 +125,7 @@ class _TimerScreenState extends State<TimerScreen> {
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),

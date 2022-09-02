@@ -21,6 +21,7 @@ class llSelectList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int curcolorindex = Provider.of<LastLayerProvider>(context).curMode;
     late final List<String> templist;
     switch (ll) {
       case "PLL":
@@ -47,7 +48,7 @@ class llSelectList extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: CustomAppBar(
-          appBarColor: _Mode[Provider.of<LastLayerProvider>(context).curMode],
+          appBarColor: _Mode[curcolorindex],
           titleText: "Select $ll",
           leading: IconButton(
             icon: Icon(Icons.arrow_back,
@@ -65,7 +66,7 @@ class llSelectList extends StatelessWidget {
           child: SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return AlgSelectTile(curll: times[index]);
+                return AlgSelectTile(curll: times[index], color:_Mode[curcolorindex]);
               },
               childCount: times.length,
             ),
