@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
@@ -38,13 +40,9 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
           });
         },
         child: Container(
-          decoration: BoxDecoration(boxShadow: const [
-            BoxShadow(
-                blurRadius: 2,
-                color: Colors.grey,
-                offset: Offset(0, 1),
-                blurStyle: BlurStyle.normal),
-          ], borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
+          decoration: BoxDecoration(
+            boxShadow: kElevationToShadow[2],
+            borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

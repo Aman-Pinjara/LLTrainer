@@ -47,7 +47,7 @@ class LLBasicStatList extends StatelessWidget {
         titleText: "All $ll",
         leading: IconButton(
           icon: Icon(Icons.arrow_back,
-              color: Theme.of(context).colorScheme.onBackground),
+              color: Theme.of(context).colorScheme.primary),
           onPressed: () {
             Navigator.of(context).pop();
           },

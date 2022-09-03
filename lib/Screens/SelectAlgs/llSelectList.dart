@@ -45,33 +45,44 @@ class llSelectList extends StatelessWidget {
       );
       times.add(element);
     }
-    return Scaffold(
-      body: SafeArea(
-        child: CustomAppBar(
+    return WillPopScope(
+      onWillPop: () async {
+        if (controller.hasClients) {
+          controller.animateToPage(
+            1,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+          );
+        }
+        return false;
+      },
+      child: Scaffold(
+        body: SafeArea(
+            child: CustomAppBar(
           appBarColor: _Mode[curcolorindex],
           titleText: "Select $ll",
           leading: IconButton(
-            icon: Icon(Icons.arrow_back,
-                color: Theme.of(context).colorScheme.onBackground),
-            onPressed: () {
-              if (controller.hasClients) {
-                controller.animateToPage(
+              icon: Icon(Icons.arrow_back,
+                  color: Theme.of(context).colorScheme.primary),
+              onPressed: () {
+                if (controller.hasClients) {
+                  controller.animateToPage(
                     1,
                     duration: const Duration(milliseconds: 400),
                     curve: Curves.easeInOut,
-                );
-              }
-            }
-          ),
+                  );
+                }
+              }),
           child: SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return AlgSelectTile(curll: times[index], color:_Mode[curcolorindex]);
+                return AlgSelectTile(
+                    curll: times[index], color: _Mode[curcolorindex]);
               },
               childCount: times.length,
             ),
           ),
-        )
+        )),
       ),
     );
   }

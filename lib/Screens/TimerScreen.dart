@@ -43,7 +43,7 @@ class _TimerScreenState extends State<TimerScreen> {
                         textAlign: TextAlign.center,
                         pllScramble,
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: 17.5.sp,
                           fontWeight: FontWeight.w500
                         ),

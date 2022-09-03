@@ -51,13 +51,8 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
           dialog(context, times);
         },
         child: Container(
-          decoration: BoxDecoration(boxShadow: const [
-            BoxShadow(
-                blurRadius: 1,
-                color: Colors.grey,
-                offset: Offset(0, 1),
-                blurStyle: BlurStyle.normal),
-          ], borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
+          decoration: BoxDecoration(boxShadow: kElevationToShadow[2], 
+          borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
           child: Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Row(
@@ -99,20 +94,31 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
                 padding: EdgeInsets.symmetric(vertical: 12.h),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(Icons.close, color: ZBLLTHEME,)),
-                        Text(
-                          widget.curlltype.name,
-                          style: TextStyle(
-                              fontSize: 17.sp, fontWeight: FontWeight.w500,),
+                    Material(
+                      elevation: 5,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          border: Border(bottom: BorderSide(color: Colors.grey))
                         ),
-                      ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: const Icon(Icons.close, color: ZBLLTHEME,)),
+                              Text(
+                                widget.curlltype.name,
+                                style: TextStyle(
+                                    fontSize: 17.sp, fontWeight: FontWeight.w500,),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                     Expanded(
                       child: RawScrollbar(

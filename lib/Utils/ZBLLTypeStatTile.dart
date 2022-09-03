@@ -15,13 +15,7 @@ class ZBLLTypeStatTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
       child: Container(
-        decoration: BoxDecoration(boxShadow: const [
-          BoxShadow(
-              blurRadius: 2,
-              color: Colors.grey,
-              offset: Offset(0, 1),
-              blurStyle: BlurStyle.normal),
-          ], 
+        decoration: BoxDecoration(boxShadow: kElevationToShadow[2], 
           borderRadius: BorderRadius.circular(6.0), 
           color: Theme.of(context).colorScheme.secondary
         ),

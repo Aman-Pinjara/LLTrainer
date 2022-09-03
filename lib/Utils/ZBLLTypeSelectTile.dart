@@ -45,13 +45,7 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
           });
         },
         child: Container(
-          decoration: BoxDecoration(boxShadow: const [
-            BoxShadow(
-                blurRadius: 2,
-                color: Colors.grey,
-                offset: Offset(0, 1),
-                blurStyle: BlurStyle.normal),
-          ], borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
+          decoration: BoxDecoration(boxShadow: kElevationToShadow[2], borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

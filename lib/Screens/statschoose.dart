@@ -12,74 +12,86 @@ class StatsChoose extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 19.w, vertical: 20.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                // ignore: prefer_const_literals_to_create_immutables
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 37.w,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "STATISTICS",
-                          style: TextStyle(
-                            fontSize: 30.sp,
-                            fontWeight: FontWeight.bold,
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(1),
+    return WillPopScope(
+      onWillPop: () async {
+        if (controller.hasClients) {
+          controller.animateToPage(
+            1,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+          );
+        }
+        return false;
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 19.w, vertical: 20.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 37.w,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "STATISTICS",
+                            style: TextStyle(
+                              fontSize: 30.sp,
+                              fontWeight: FontWeight.bold,
+                              color:
+                                  Theme.of(context).primaryColor.withOpacity(1),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 124.h,
-                          width: 112.w,
-                          child: Image.asset('assets/image.png'),
-                        )
-                      ],
+                          SizedBox(
+                            height: 124.h,
+                            width: 112.w,
+                            child: Image.asset('assets/image.png'),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  llTile("PLL", PLLTHEME.withOpacity(1), context),
-                  llTile("OLL", OLLTHEME.withOpacity(1), context),
-                  llTile("COLL", COLLTHEME.withOpacity(1), context),
-                  llTile("ZBLL", ZBLLTHEME.withOpacity(1), context),
-                ],
+                    llTile("PLL", PLLTHEME.withOpacity(1), context),
+                    llTile("OLL", OLLTHEME.withOpacity(1), context),
+                    llTile("COLL", COLLTHEME.withOpacity(1), context),
+                    llTile("ZBLL", ZBLLTHEME.withOpacity(1), context),
+                  ],
+                ),
               ),
-            ),
-            Positioned(
-              top: 27.h,
-              left: 19.w,
-              child: GestureDetector(
-                onTap: () {
-                  if (controller.hasClients) {
-                    controller.animateToPage(
-                      1,
-                      duration: const Duration(milliseconds: 400),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                },
-                child: Text(
-                  String.fromCharCode(Icons.arrow_back_rounded.codePoint),
-                  style: TextStyle(
-                    inherit: false,
-                    color: Theme.of(context).primaryColorLight.withOpacity(1),
-                    fontSize: 30.sp,
-                    fontWeight: FontWeight.w900,
-                    fontFamily: Icons.arrow_back_rounded.fontFamily,
-                    package: Icons.arrow_back_rounded.fontPackage,
+              Positioned(
+                top: 27.h,
+                left: 19.w,
+                child: GestureDetector(
+                  onTap: () {
+                    if (controller.hasClients) {
+                      controller.animateToPage(
+                        1,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  child: Text(
+                    String.fromCharCode(Icons.arrow_back_rounded.codePoint),
+                    style: TextStyle(
+                      inherit: false,
+                      color: Theme.of(context).primaryColorLight.withOpacity(1),
+                      fontSize: 30.sp,
+                      fontWeight: FontWeight.w900,
+                      fontFamily: Icons.arrow_back_rounded.fontFamily,
+                      package: Icons.arrow_back_rounded.fontPackage,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -96,11 +108,12 @@ class StatsChoose extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => StatsDetail(
-                          ll: ll,
-                          llMode: color,
-                          times: ll == "PLL" ? plltimes : olltimes,
-                        ),),
+                  builder: (context) => StatsDetail(
+                    ll: ll,
+                    llMode: color,
+                    times: ll == "PLL" ? plltimes : olltimes,
+                  ),
+                ),
               );
             },
             style: ButtonStyle(

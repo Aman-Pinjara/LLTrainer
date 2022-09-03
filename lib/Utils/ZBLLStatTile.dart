@@ -13,7 +13,6 @@ class ZBLLStatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("hellot this is zb stat tile");
     List<LLViewModel> times = [];
     bool conout = false;
     for (var element in ZBLLNAMES) {
@@ -38,13 +37,7 @@ class ZBLLStatTile extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                    blurRadius: 1,
-                    color: Colors.grey,
-                    offset: Offset(0, 1),
-                    blurStyle: BlurStyle.normal),
-              ],
+              boxShadow: kElevationToShadow[2],
               borderRadius: BorderRadius.circular(6.0),
               color: Theme.of(context).primaryColorDark),
           child: Row(
@@ -124,25 +117,31 @@ class ZBLLStatTile extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 12.h),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(
-                              Icons.close,
-                              color: ZBLLTHEME,
-                            )),
-                        Text(
-                          zbType.name,
-                          style: TextStyle(
-                            fontSize: 17.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
+                    Material(
+                      elevation: 5,
+                      child: Container(
+                        decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: ZBLLTHEME,
+                                )),
+                            Text(
+                              zbType.name,
+                              style: TextStyle(
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                     Expanded(
                       child: RawScrollbar(
