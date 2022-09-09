@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
 
+import '../Backend/GenerateScramble.dart';
 import '../MyProvider/LastLayerProvier.dart';
 import '../MyProvider/LockScrollProvier.dart';
 
@@ -17,7 +18,7 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
-  String pllScramble = "R U R' U' R' F R2 U' R' U' R U R' F'";
+  late String scramble;
 
   final _Mode = [PLLTHEME, OLLTHEME, COLLTHEME, ZBLLTHEME];
   final _ModeName = ["PLL", "OLL", "COLL", "ZBLL"];
@@ -41,6 +42,7 @@ class _TimerScreenState extends State<TimerScreen> {
     ];
     int curMode = Provider.of<LastLayerProvider>(context).curMode;
     String ll = Provider.of<LastLayerProvider>(context).ll;
+    scramble = timeron? scramble: GenerateScramble().scramble(ll);
     return GestureDetector(
       onTap: () {
         //stop timer if started
@@ -72,9 +74,11 @@ class _TimerScreenState extends State<TimerScreen> {
           time.start();
         });
         Timer.periodic(Duration(milliseconds: 100), (t) {
-          if (time.elapsedMilliseconds < 60000) {
+          if (time.elapsedMilliseconds < 60000 && time.isRunning) {
+            print(time.elapsedMilliseconds / 1000);
             setState(() {});
           } else {
+            t.cancel();
             time.stop();
             setState(() {
               timeron = false;
@@ -92,7 +96,7 @@ class _TimerScreenState extends State<TimerScreen> {
                   maintainState: true,
                   maintainAnimation: true,
                   visible: !timeron,
-                  child: algView(curMode, context),
+                  child: algView(curMode, context, ll),
                 ),
                 Expanded(
                   child: Column(
@@ -116,33 +120,33 @@ class _TimerScreenState extends State<TimerScreen> {
                         ),
                       ),
                       Visibility(
-                        maintainSize: true,
-                  maintainState: true,
-                  maintainAnimation: true,
+                          maintainSize: true,
+                          maintainState: true,
+                          maintainAnimation: true,
                           visible: !timeron,
                           child: timesView(curMode, "Avg :", "12.232")),
                       Visibility(
-                        maintainSize: true,
-                  maintainState: true,
-                  maintainAnimation: true,
+                          maintainSize: true,
+                          maintainState: true,
+                          maintainAnimation: true,
                           visible: !timeron,
                           child: timesView(curMode, "Best :", "12.232")),
                       SizedBox(
                         height: 20.h,
                       ),
                       Visibility(
-                        maintainSize: true,
-                  maintainState: true,
-                  maintainAnimation: true,
+                          maintainSize: true,
+                          maintainState: true,
+                          maintainAnimation: true,
                           visible: !timeron,
                           child: prevActionButtons(curMode, context)),
                     ],
                   ),
                 ),
                 Visibility(
-                  maintainSize: true,
-                  maintainState: true,
-                  maintainAnimation: true,
+                    maintainSize: true,
+                    maintainState: true,
+                    maintainAnimation: true,
                     visible: !timeron,
                     child: algChangeButton(curMode, context, ll)),
               ],
@@ -156,6 +160,12 @@ class _TimerScreenState extends State<TimerScreen> {
       ),
     );
   }
+
+  // void updateScramble(String ll) {
+  //   setState(() {
+  //     scramble = GenerateScramble().scramble(ll);
+  //   });
+  // }
 
   Icon lockIcon(BuildContext context) {
     return Icon(
@@ -275,7 +285,7 @@ class _TimerScreenState extends State<TimerScreen> {
         ));
   }
 
-  Container algView(int curMode, BuildContext context) {
+  Container algView(int curMode, BuildContext context, String ll) {
     return Container(
       decoration: BoxDecoration(
         color: _Mode[curMode],
@@ -288,7 +298,7 @@ class _TimerScreenState extends State<TimerScreen> {
             width: 200.w,
             child: Text(
               textAlign: TextAlign.center,
-              pllScramble,
+              scramble,
               style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   fontSize: 17.5.sp,
