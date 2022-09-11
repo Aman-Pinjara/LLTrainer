@@ -49,15 +49,8 @@ class _TimerScreenState extends State<TimerScreen> {
         if (timeron) {
           setState(() {
             time.stop();
-            timeron = false;
           });
         }
-      },
-      onLongPressStart: (details) {
-        //change timer color to red
-        setState(() {
-          timerColor = 1;
-        });
       },
       onLongPress: () {
         //change timer color to green
@@ -75,11 +68,9 @@ class _TimerScreenState extends State<TimerScreen> {
         });
         Timer.periodic(Duration(milliseconds: 100), (t) {
           if (time.elapsedMilliseconds < 60000 && time.isRunning) {
-            print(time.elapsedMilliseconds / 1000);
             setState(() {});
           } else {
             t.cancel();
-            time.stop();
             setState(() {
               timeron = false;
             });
