@@ -6,20 +6,23 @@ import 'package:lltrainer/AlgLists/OLLAlgs.dart';
 import 'package:lltrainer/AlgLists/PLLAlgs.dart';
 import 'package:lltrainer/AlgLists/COLLAlgs.dart';
 import 'package:lltrainer/AlgLists/ZBLLAlgs.dart';
+import 'package:lltrainer/Models/ScrambleData.dart';
 import 'package:lltrainer/llnames/OLL.dart';
 import 'package:lltrainer/llnames/PLL.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/llnames/COLL.dart';
 
 class GenerateScramble {
-  String scramble(String ll) {
+  ScrambleData scramble(String ll) {
     final Algmap = llgetmap(ll);
     List<String> a = getCasesFromDb(ll);
     String llcase = a[Random().nextInt(a.length)];
     String alg = getRandomAlg(llcase, Algmap, ll);
     print("case $llcase");
     print("alg $alg");
-    return modify(alg);
+    final scramble =
+        ScrambleData(scramble: modify(alg), ll: ll, llcase: llcase);
+    return scramble;
   }
 
   static List<String> getCasesFromDb(String ll) {

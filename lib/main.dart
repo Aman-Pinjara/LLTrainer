@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lltrainer/Screens/SelectAlgs/Selection.dart';
-import 'package:lltrainer/Screens/StatsChoose.dart';
+import 'package:lltrainer/Screens/TimesViewPage.dart';
 import 'package:lltrainer/custom_theme.dart';
 import 'package:lltrainer/Screens/TimerScreen.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     bool dontScroll = Provider.of<LockScrollProvider>(context).dontScroll;
     final PageController _controller = PageController(initialPage: 1);
+    final PageController timeviewcontroller = PageController();
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: (context, child) => MaterialApp(
@@ -41,12 +42,19 @@ class MyApp extends StatelessWidget {
           return true;
         },
         child: PageView(
+          scrollDirection: Axis.vertical,
           physics: dontScroll ? NeverScrollableScrollPhysics() : null,
-          controller: _controller,
+          controller: timeviewcontroller,
           children: [
-            Selection(controller: _controller,),
-            TimerScreen(),
-            StatsChoose(controller: _controller,),
+            PageView(
+              physics: dontScroll ? NeverScrollableScrollPhysics() : null,
+              controller: _controller,
+              children: [
+                Selection(controller: _controller,),
+                TimerScreen(),
+              ],
+            ),
+            TimesViewPage(controller: timeviewcontroller,)
           ],
         ),
       ),

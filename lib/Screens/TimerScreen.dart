@@ -4,6 +4,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lltrainer/Backend/Timedb.dart';
+import 'package:lltrainer/Models/ScrambleData.dart';
+import 'package:lltrainer/Models/TimeModel.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +21,7 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
-  late String scramble;
+  late ScrambleData scramble;
 
   final _Mode = [PLLTHEME, OLLTHEME, COLLTHEME, ZBLLTHEME];
   final _ModeName = ["PLL", "OLL", "COLL", "ZBLL"];
@@ -42,22 +45,35 @@ class _TimerScreenState extends State<TimerScreen> {
     ];
     int curMode = Provider.of<LastLayerProvider>(context).curMode;
     String ll = Provider.of<LastLayerProvider>(context).ll;
-    scramble = timeron? scramble: GenerateScramble().scramble(ll);
+    scramble = timeron ? scramble : GenerateScramble().scramble(ll);
     return GestureDetector(
       onTap: () {
         //stop timer if started
         if (timeron) {
           setState(() {
             time.stop();
+            isLock = true;
+            Provider.of<LockScrollProvider>(context, listen: false)
+                .changeScroll(lock: false);
           });
+          print("test ${scramble.llcase}");
+          Timedb.instance.insertInDB(TimeModel(
+              lltype: ll,
+              llcase: scramble.llcase,
+              time: double.parse(
+                  (time.elapsedMilliseconds / 1000).toStringAsFixed(2))));
         }
       },
       onLongPress: () {
         //change timer color to green
         setState(() {
+          isLock = true;
+          Provider.of<LockScrollProvider>(context, listen: false)
+              .changeScroll(lock: true);
           timerColor = 2;
           timeron = true;
         });
+
         time.reset();
       },
       onLongPressEnd: (details) {
@@ -70,8 +86,12 @@ class _TimerScreenState extends State<TimerScreen> {
           if (time.elapsedMilliseconds < 60000 && time.isRunning) {
             setState(() {});
           } else {
+            time.stop();
             t.cancel();
             setState(() {
+              isLock = false;
+              Provider.of<LockScrollProvider>(context, listen: false)
+                  .changeScroll(lock: false);
               timeron = false;
             });
           }
@@ -289,7 +309,7 @@ class _TimerScreenState extends State<TimerScreen> {
             width: 200.w,
             child: Text(
               textAlign: TextAlign.center,
-              scramble,
+              scramble.scramble,
               style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   fontSize: 17.5.sp,
