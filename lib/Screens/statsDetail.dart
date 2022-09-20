@@ -25,17 +25,14 @@ class StatsDetail extends StatefulWidget {
 }
 
 class _StatsDetailState extends State<StatsDetail> {
-  late List<TimeModel> times;
 
   @override
   void initState() {
     super.initState();
-    getlltime();
   }
 
   @override
   Widget build(BuildContext context) {
-    getlltime();
     return Scaffold(
       body: WillPopScope(
         onWillPop: () async {
@@ -100,7 +97,7 @@ class _StatsDetailState extends State<StatsDetail> {
                           ),
                           itemCount: snapshot.data!.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return TimesTile(times[index], context);
+                            return TimesTile(snapshot.data![index], context);
                           },
                         );
                       }
@@ -266,9 +263,5 @@ class _StatsDetailState extends State<StatsDetail> {
         ),
       ),
     );
-  }
-
-  Future getlltime() async {
-    times = await Timedb.instance.getllTime(widget.ll);
   }
 }

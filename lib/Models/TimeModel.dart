@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 final TIMESTABLENAME = "timetable";
 
 class TimeModelDBFields {

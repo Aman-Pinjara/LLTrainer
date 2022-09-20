@@ -1,13 +1,15 @@
-// ignore_for_file: file_names, prefer_const_constructors
+// ignore_for_file: file_names, prefer_const_constructors, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
 
+import '../Models/SelectionModel.dart';
+
 class AlgSelectTile extends StatefulWidget {
-  final LLSelectViewModel curll;
-  final Color color;
-  const AlgSelectTile({required this.color, required this.curll, Key? key})
+  final SelectionModel curll;
+  final String defaultAlg;
+  const AlgSelectTile({required this.defaultAlg, required this.curll, Key? key})
       : super(key: key);
 
   @override
@@ -16,13 +18,14 @@ class AlgSelectTile extends StatefulWidget {
 
 class _AlgSelectTileState extends State<AlgSelectTile> {
   late TextEditingController _controller;
+  late int i;
   @override
   void initState() {
     _controller = TextEditingController(text: widget.curll.alg);
+    i = widget.curll.selectionType;
     super.initState();
   }
 
-  int i = 0;
   @override
   Widget build(BuildContext context) {
     final colorarr = [
@@ -34,15 +37,16 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
           setState(() {
             i = (i + 1) % colorarr.length;
           });
         },
         child: Container(
           decoration: BoxDecoration(
-            boxShadow: kElevationToShadow[2],
-            borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
+              boxShadow: kElevationToShadow[2],
+              borderRadius: BorderRadius.circular(6.0),
+              color: colorarr[i]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -50,14 +54,14 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
                 height: 60.h,
                 width: 60.h,
                 child: Image.asset(
-                  widget.curll.img,
+                  "assets/${widget.curll.lltype}/${widget.curll.llcase}.png",
                   fit: BoxFit.cover,
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(left: 12.w),
                 child: Text(
-                  widget.curll.name,
+                  widget.curll.llcase,
                   style:
                       TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
                 ),
@@ -71,7 +75,7 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
                   child: SizedBox(
                     width: 125.w,
                     child: Text(
-                      widget.curll.alg,
+                      widget.curll.alg ?? widget.defaultAlg,
                       style: TextStyle(fontSize: 12.sp),
                       textAlign: TextAlign.center,
                     ),
@@ -111,12 +115,21 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("Cancel",style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),)),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSecondary),
+                    )),
                 TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("OK",style: TextStyle(color: Theme.of(context).colorScheme.onSecondary))),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    "OK",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSecondary),
+                  ),
+                ),
               ],
             )
           ],

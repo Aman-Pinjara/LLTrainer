@@ -1,6 +1,8 @@
 // ignore_for_file: camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:lltrainer/AlgLists/DefautlAlgs.dart';
+import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/MyProvider/LastLayerProvier.dart';
 import 'package:lltrainer/Utils/AlgSelectTile.dart';
@@ -8,6 +10,7 @@ import 'package:lltrainer/Utils/CustomAppBar.dart';
 import 'package:lltrainer/llnames/PLL.dart';
 import 'package:provider/provider.dart';
 
+import '../../Models/SelectionModel.dart';
 import '../../llnames/COLL.dart';
 import '../../llnames/OLL.dart';
 import '../../my_colors.dart';
@@ -23,6 +26,7 @@ class llSelectList extends StatelessWidget {
   Widget build(BuildContext context) {
     int curcolorindex = Provider.of<LastLayerProvider>(context).curMode;
     late final List<String> templist;
+    late Map<String, String> defaultAlg;
     switch (ll) {
       case "PLL":
         templist = PLLNAMES;
@@ -36,12 +40,25 @@ class llSelectList extends StatelessWidget {
       default:
         print("ll");
     }
+    switch (ll) {
+      case "PLL":
+        defaultAlg = DefaultAlgs.pll;
+        break;
+      case "OLL":
+        defaultAlg = DefaultAlgs.oll;
+        break;
+      case "COLL":
+        defaultAlg = DefaultAlgs.coll;
+        break;
+      default:
+        print("ll");
+    }
     List<LLSelectViewModel> times = [];
     for (var llname in templist) {
       final element = LLSelectViewModel(
         img: "assets/$ll/$llname.png",
         name: llname,
-        alg: "R U R' U' R' F R2 U R' U' R U R' F'",
+        alg: defaultAlg[llname]!,
       );
       times.add(element);
     }
@@ -58,32 +75,66 @@ class llSelectList extends StatelessWidget {
       },
       child: Scaffold(
         body: SafeArea(
-          child: CustomAppBar(
+            child: CustomAppBar(
           appBarColor: _Mode[curcolorindex],
           titleText: "Select $ll",
           leading: IconButton(
-              icon: Icon(Icons.arrow_back,
-                  color: Theme.of(context).colorScheme.primary),
-              onPressed: () {
-                if (controller.hasClients) {
-                  controller.animateToPage(
-                    1,
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              }),
-          child: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return AlgSelectTile(
-                    curll: times[index], color: _Mode[curcolorindex]);
-              },
-              childCount: times.length,
-            ),
+            icon: Icon(Icons.arrow_back,
+                color: Theme.of(context).colorScheme.primary),
+            onPressed: () {
+              if (controller.hasClients) {
+                controller.animateToPage(
+                  1,
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                );
+              }
+            },
+          ),
+          child: FutureBuilder<List<SelectionModel>>(
+            future: getllList(templist, ll),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return AlgSelectTile(
+                        curll: snapshot.data![index],
+                        defaultAlg: defaultAlg[snapshot.data![index].llcase]!,
+                      );
+                    },
+                    childCount: snapshot.data!.length,
+                  ),
+                );
+              }
+              if (snapshot.hasError) {
+                return SliverList(
+                    delegate: SliverChildListDelegate(
+                        [const Center(child: Text("There was some error"))]));
+              }
+              return SliverList(
+                  delegate: SliverChildListDelegate(
+                      [const Center(child: Text("Loading"))]));
+            },
           ),
         )),
       ),
     );
+  }
+
+  Future<List<SelectionModel>> getllList(
+      List<String> templist, String ll) async {
+    List<SelectionModel> times = [];
+    for (var llname in templist) {
+      final element =
+          SelectionModel(llcase: llname, lltype: ll, selectionType: 0);
+      times.add(element);
+    }
+    List<SelectionModel> fromDB = await Selectiondb.instance.getSelections(ll);
+    for (var dbelement in fromDB) {
+      times[times.indexWhere((element) => element.llcase == dbelement.llcase)] =
+          dbelement;
+    }
+    return times;
   }
 }

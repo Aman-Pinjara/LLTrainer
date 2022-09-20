@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lltrainer/Backend/Selectiondb.dart';
+import 'package:lltrainer/Models/SelectionModel.dart';
 import 'package:lltrainer/Models/ZBLLTileTypeModel.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
 import 'package:lltrainer/Utils/ZBLLSelectTile.dart';
@@ -11,18 +13,11 @@ import '../../MyProvider/LastLayerProvier.dart';
 
 class ZBLLSelectList extends StatelessWidget {
   final PageController controller;
+  final ll = "ZBLL";
   const ZBLLSelectList({required this.controller, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    List<ZBLLTileTypeModel> timesType = [];
-    for (var llname in ZBLLNAMESTYPE) {
-      final element = ZBLLTileTypeModel(
-        img: "assets/ZBLL/$llname.svg",
-        name: llname,
-      );
-      timesType.add(element);
-    }
     return WillPopScope(
       onWillPop: () async {
         if (controller.hasClients) {
@@ -51,18 +46,72 @@ class ZBLLSelectList extends StatelessWidget {
                   );
                 }
               }),
-          child: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return ZBLLSelectTile(
-                  curlltype: timesType[index],
+          child: FutureBuilder<List<SelectionModel>>(
+            future: getllTypeTile(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      return ZBLLSelectTile(
+                        curlltype: snapshot.data![index],
+                      );
+                    },
+                    childCount: snapshot.data!.length,
+                  ),
                 );
-              },
-              childCount: timesType.length,
-            ),
+              }
+              if (snapshot.hasError) {
+                return SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      const Center(
+                        child: Text("There was some error"),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    const Center(
+                      child: Text("Loading"),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         )),
       ),
     );
+  }
+
+  Future<List<SelectionModel>> getllTypeTile() async {
+    List<SelectionModel> timesType = [];
+    final List<SelectionModel> llFromDB =
+        await Selectiondb.instance.getSelections(ll);
+    for (var llname in ZBLLNAMESTYPE) {
+      final List<SelectionModel> newListTemp = llFromDB
+          .where((element) => element.llcase.startsWith(llname))
+          .toList();
+      int tempval = newListTemp[0].selectionType;
+      for (var element in newListTemp) {
+        if (element.selectionType == tempval) {
+          continue;
+        }
+        tempval = 0;
+        break;
+      }
+      final element = SelectionModel(
+        llcase: llname,
+        lltype: ll,
+        selectionType: tempval,
+      );
+      // img: "assets/ZBLL/$llname.svg",
+      timesType.add(element);
+    }
+    return timesType;
   }
 }

@@ -7,7 +7,9 @@ import 'package:lltrainer/Models/LLSelectViewModel.dart';
 
 class ZBLLTypeSelectTile extends StatefulWidget {
   final LLSelectViewModel zb;
-  ZBLLTypeSelectTile({required this.zb, Key? key}) : super(key: key);
+  final int selection;
+  ZBLLTypeSelectTile({required this.selection, required this.zb, Key? key})
+      : super(key: key);
 
   @override
   State<ZBLLTypeSelectTile> createState() => _ZBLLTypeSelectTileState();
@@ -15,10 +17,12 @@ class ZBLLTypeSelectTile extends StatefulWidget {
 
 class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
   late TextEditingController _controller;
+  late int i;
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.zb.alg);
+    i = widget.selection;
   }
 
   @override
@@ -27,7 +31,6 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
     super.dispose();
   }
 
-  int i = 0;
   @override
   Widget build(BuildContext context) {
     final colorarr = [
@@ -45,7 +48,10 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
           });
         },
         child: Container(
-          decoration: BoxDecoration(boxShadow: kElevationToShadow[2], borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
+          decoration: BoxDecoration(
+              boxShadow: kElevationToShadow[2],
+              borderRadius: BorderRadius.circular(6.0),
+              color: colorarr[i]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -119,12 +125,18 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("Cancel",style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),)),
+                    child: Text(
+                      "Cancel",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSecondary),
+                    )),
                 TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("OK",style: TextStyle(color: Theme.of(context).colorScheme.onSecondary))),
+                    child: Text("OK",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSecondary))),
               ],
             )
           ],

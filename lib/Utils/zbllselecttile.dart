@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
-import 'package:lltrainer/Models/ZBLLTileTypeModel.dart';
+import 'package:lltrainer/Models/SelectionModel.dart';
 import 'package:lltrainer/Utils/ZBLLTypeSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
 
 class ZBLLSelectTile extends StatefulWidget {
-  final ZBLLTileTypeModel curlltype;
+  final SelectionModel curlltype;
   const ZBLLSelectTile({required this.curlltype, Key? key}) : super(key: key);
 
   @override
@@ -16,17 +17,24 @@ class ZBLLSelectTile extends StatefulWidget {
 }
 
 class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
-  int i = 0;
+  late int i;
+  @override
+  void initState() {
+    super.initState();
+    i = widget.curlltype.selectionType;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<LLSelectViewModel> times = [];
     bool conout = false;
     for (var element in ZBLLNAMES) {
-      if (element.startsWith("${widget.curlltype.name}-")) {
+      if (element.startsWith("${widget.curlltype.llcase}-")) {
         LLSelectViewModel temp = LLSelectViewModel(
-            img: "assets/ZBLL/$element.svg",
-            name: element,
-            alg: "R U R' U' R' F R2 U R' U' R U R' F'");
+          img: "assets/ZBLL/$element.svg",
+          name: element,
+          alg: "sorry ZB was too Long so no Default algs :,(",
+        );
         times.add(temp);
         conout = true;
         continue;
@@ -51,8 +59,10 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
           dialog(context, times);
         },
         child: Container(
-          decoration: BoxDecoration(boxShadow: kElevationToShadow[2], 
-          borderRadius: BorderRadius.circular(6.0), color: colorarr[i]),
+          decoration: BoxDecoration(
+              boxShadow: kElevationToShadow[2],
+              borderRadius: BorderRadius.circular(6.0),
+              color: colorarr[i]),
           child: Padding(
             padding: const EdgeInsets.only(right: 10),
             child: Row(
@@ -62,14 +72,14 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
                   height: 60.h,
                   width: 60.h,
                   child: SvgPicture.asset(
-                    widget.curlltype.img,
+                    "assets/${widget.curlltype.lltype}/${widget.curlltype.llcase}.svg",
                     fit: BoxFit.cover,
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(
-                    widget.curlltype.name,
+                    widget.curlltype.llcase,
                     style:
                         TextStyle(fontSize: 17.sp, fontWeight: FontWeight.bold),
                   ),
@@ -81,6 +91,15 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
         ),
       ),
     );
+  }
+
+  Future<Map<String,int>> getSelectionFromDb(List<LLSelectViewModel> curcases)async{
+    Map<String,int> timesMap = {};
+    List<SelectionModel> times = await Selectiondb.instance.getSelections("ZBLL");
+    for (var element in curcases) {
+      timesMap[element.name] = times[times.indexWhere((timeselement) => timeselement.llcase==element.name)].selectionType;
+    }
+    return timesMap;
   }
 
   void dialog(BuildContext context, List<LLSelectViewModel> times) {
@@ -98,8 +117,8 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
                       elevation: 5,
                       child: Container(
                         decoration: const BoxDecoration(
-                          border: Border(bottom: BorderSide(color: Colors.grey))
-                        ),
+                            border:
+                                Border(bottom: BorderSide(color: Colors.grey))),
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Row(
@@ -109,11 +128,16 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  icon: const Icon(Icons.close, color: ZBLLTHEME,)),
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: ZBLLTHEME,
+                                  )),
                               Text(
-                                widget.curlltype.name,
+                                widget.curlltype.llcase,
                                 style: TextStyle(
-                                    fontSize: 17.sp, fontWeight: FontWeight.w500,),
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
@@ -121,23 +145,41 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
                       ),
                     ),
                     Expanded(
-                      child: RawScrollbar(
-                        thumbColor: ZBLLTHEME,
-                        thumbVisibility: true,
-                        radius: const Radius.circular(5),
-                        thickness: 6,
-                        child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: times.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ZBLLTypeSelectTile(zb: times[index]);
-                          },
-                        ),
+                      child: FutureBuilder<Map<String, int>>(
+                        future: getSelectionFromDb(times),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return RawScrollbar(
+                              thumbColor: ZBLLTHEME,
+                              thumbVisibility: true,
+                              radius: const Radius.circular(5),
+                              thickness: 6,
+                              child: ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: times.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return ZBLLTypeSelectTile(
+                                      zb: times[index],
+                                      selection:
+                                          snapshot.data![times[index].name]!);
+                                },
+                              ),
+                            );
+                          }
+                          if (snapshot.hasData) {
+                            return const Center(
+                              child: Text("There was some error"),
+                            );
+                          }
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
                       ),
                     ),
                   ],
                 ),
               ));
-        });
+        },);
   }
 }

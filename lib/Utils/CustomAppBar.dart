@@ -41,12 +41,13 @@ class CustomAppBar extends StatelessWidget {
                 ),
                 background: Container(
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('assets/cubeabstract.jpg'),
-                          fit: BoxFit.fitWidth,
-                          colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.3),
-                              BlendMode.dstATop))),
+                    image: DecorationImage(
+                      image: AssetImage('assets/cubeabstract.jpg'),
+                      fit: BoxFit.fitWidth,
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.3), BlendMode.dstATop),
+                    ),
+                  ),
                 ),
               ),
             ),
