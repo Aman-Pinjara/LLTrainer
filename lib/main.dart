@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
 import 'package:lltrainer/Screens/SelectAlgs/Selection.dart';
 import 'package:lltrainer/Screens/TimesViewPage.dart';
 import 'package:lltrainer/custom_theme.dart';
@@ -15,7 +16,8 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LockScrollProvider()),
-    ChangeNotifierProvider(create: (_) => LastLayerProvider())
+    ChangeNotifierProvider(create: (_) => LastLayerProvider()),
+    ChangeNotifierProvider(create: (_) => SelectionListUpdateProvider())
   ], child: const MyApp()));
 }
 

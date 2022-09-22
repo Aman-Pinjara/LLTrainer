@@ -1,5 +1,4 @@
 // ignore_for_file: depend_on_referenced_packages
-
 import 'package:lltrainer/llnames/COLL.dart';
 import 'package:lltrainer/llnames/PLL.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
@@ -75,7 +74,6 @@ class Selectiondb {
         ),
       );
     }
-    print("data added");
   }
 
   static Future insertDefaults(Database db, SelectionModel selection) async {
@@ -84,8 +82,18 @@ class Selectiondb {
 
   Future<List<SelectionModel>> getSelections(String lltype) async {
     final db = await instance.database;
-    final selection = await db.query(SELECTIONTABLENAME,
-        where: "${SelectionModelDBFields.lltype} = ?", whereArgs: [lltype]);
+    final selection = await db.query(
+      SELECTIONTABLENAME,
+      where: "${SelectionModelDBFields.lltype} = ?",
+      whereArgs: [lltype],
+    );
     return selection.map((e) => SelectionModel.fromJson(e)).toList();
+  }
+
+  Future<void> updateSelections(SelectionModel selection) async {
+    final db = await instance.database;
+    await db.update(SELECTIONTABLENAME, selection.toJson(),
+        where: "${SelectionModelDBFields.llcase} = ?",
+        whereArgs: [selection.llcase]);
   }
 }

@@ -52,9 +52,6 @@ class _TimerScreenState extends State<TimerScreen> {
         if (timeron) {
           setState(() {
             time.stop();
-            isLock = true;
-            Provider.of<LockScrollProvider>(context, listen: false)
-                .changeScroll(lock: false);
           });
           print("test ${scramble.llcase}");
           Timedb.instance.insertInDB(TimeModel(
@@ -67,7 +64,6 @@ class _TimerScreenState extends State<TimerScreen> {
       onLongPress: () {
         //change timer color to green
         setState(() {
-          isLock = true;
           Provider.of<LockScrollProvider>(context, listen: false)
               .changeScroll(lock: true);
           timerColor = 2;
@@ -89,9 +85,8 @@ class _TimerScreenState extends State<TimerScreen> {
             time.stop();
             t.cancel();
             setState(() {
-              isLock = false;
               Provider.of<LockScrollProvider>(context, listen: false)
-                  .changeScroll(lock: false);
+                  .changeScroll(lock: isLock);
               timeron = false;
             });
           }
@@ -191,28 +186,29 @@ class _TimerScreenState extends State<TimerScreen> {
   Container algChangeButton(int curMode, BuildContext context, String ll) {
     return Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.black.withOpacity(0.5), width: 0.5),
-          color: _Mode[curMode].withOpacity(1),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25.r),
-            topRight: Radius.circular(25.r),
-          )),
+        border: Border.all(color: Colors.black.withOpacity(0.5), width: 0.5),
+        color: _Mode[curMode].withOpacity(1),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25.r),
+          topRight: Radius.circular(25.r),
+        ),
+      ),
       child: InkWell(
         onLongPress: () {
           setState(() {
             isLock = !isLock;
             Provider.of<LockScrollProvider>(context, listen: false)
-                .changeScroll();
+                .changeScroll(lock: isLock);
           });
         },
         onTap: () {
-          setState(() {
-            if (!isLock) {
-              curMode = (curMode + 1) % _Mode.length;
-            }
-            Provider.of<LastLayerProvider>(context, listen: false)
-                .changeLL(_ModeName[curMode], curMode);
-          });
+          !isLock
+              ? setState(() {
+                  curMode = (curMode + 1) % _Mode.length;
+                  Provider.of<LastLayerProvider>(context, listen: false)
+                      .changeLL(_ModeName[curMode], curMode);
+                })
+              : null;
         },
         child: SizedBox(
           height: 75.w,

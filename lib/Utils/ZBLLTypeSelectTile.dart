@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
+import 'package:lltrainer/Models/SelectionModel.dart';
+import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
+import 'package:provider/provider.dart';
 
 class ZBLLTypeSelectTile extends StatefulWidget {
   final LLSelectViewModel zb;
@@ -46,6 +49,15 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
           setState(() {
             i = (i + 1) % colorarr.length;
           });
+          Provider.of<SelectionListUpdateProvider>(context, listen: false)
+              .addSelection(
+            SelectionModel(
+              llcase: widget.zb.name,
+              lltype: "ZBLL",
+              selectionType: i,
+              alg: widget.zb.alg,
+            ),
+          );
         },
         child: Container(
           decoration: BoxDecoration(

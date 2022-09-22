@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lltrainer/Models/LLSelectViewModel.dart';
+import 'package:provider/provider.dart';
+import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
 
 import '../Models/SelectionModel.dart';
 
@@ -34,12 +35,30 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
       Theme.of(context).colorScheme.primaryContainer,
       Theme.of(context).colorScheme.secondaryContainer,
     ];
+    var updateSelection =
+        Provider.of<SelectionListUpdateProvider>(context).selectionUpdateList;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
       child: GestureDetector(
         onTap: () async {
           setState(() {
             i = (i + 1) % colorarr.length;
+            print(i);
+            int temp = updateSelection
+                .indexWhere((element) => element.llcase == widget.curll.llcase);
+            if (temp == -1) {
+              Provider.of<SelectionListUpdateProvider>(context, listen: false)
+                  .addSelection(
+                SelectionModel(
+                  llcase: widget.curll.llcase,
+                  lltype: widget.curll.lltype,
+                  selectionType: i,
+                  alg: widget.curll.alg,
+                ),
+              );
+            } else {
+              
+            }
           });
         },
         child: Container(

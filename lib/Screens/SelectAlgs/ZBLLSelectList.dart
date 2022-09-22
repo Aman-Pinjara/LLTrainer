@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Models/SelectionModel.dart';
-import 'package:lltrainer/Models/ZBLLTileTypeModel.dart';
+import 'package:lltrainer/Utils/AlgSelectSaveBtn.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
 import 'package:lltrainer/Utils/ZBLLSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
-import 'package:provider/provider.dart';
-
-import '../../MyProvider/LastLayerProvier.dart';
 
 class ZBLLSelectList extends StatelessWidget {
   final PageController controller;
+  Map<String, List<SelectionModel>> llTypeCases = {};
   final ll = "ZBLL";
-  const ZBLLSelectList({required this.controller, Key? key}) : super(key: key);
+  ZBLLSelectList({required this.controller, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +27,7 @@ class ZBLLSelectList extends StatelessWidget {
         return false;
       },
       child: Scaffold(
+        floatingActionButton: AlgSelectSaveBtn(controller: controller,),
         body: SafeArea(
             child: CustomAppBar(
           appBarColor: ZBLLTHEME,
@@ -55,6 +53,7 @@ class ZBLLSelectList extends StatelessWidget {
                     (BuildContext context, int index) {
                       return ZBLLSelectTile(
                         curlltype: snapshot.data![index],
+                        llTypeCases: llTypeCases[snapshot.data![index].llcase]!,
                       );
                     },
                     childCount: snapshot.data!.length,
@@ -96,6 +95,7 @@ class ZBLLSelectList extends StatelessWidget {
       final List<SelectionModel> newListTemp = llFromDB
           .where((element) => element.llcase.startsWith(llname))
           .toList();
+      llTypeCases.putIfAbsent(llname, () => newListTemp);
       int tempval = newListTemp[0].selectionType;
       for (var element in newListTemp) {
         if (element.selectionType == tempval) {

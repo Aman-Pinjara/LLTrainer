@@ -5,6 +5,7 @@ import 'package:lltrainer/AlgLists/DefautlAlgs.dart';
 import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/MyProvider/LastLayerProvier.dart';
+import 'package:lltrainer/Utils/AlgSelectSaveBtn.dart';
 import 'package:lltrainer/Utils/AlgSelectTile.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
 import 'package:lltrainer/llnames/PLL.dart';
@@ -21,21 +22,22 @@ class llSelectList extends StatelessWidget {
   llSelectList({required this.ll, required this.controller, Key? key})
       : super(key: key);
   final _Mode = [PLLTHEME, OLLTHEME, COLLTHEME, ZBLLTHEME];
+  final List<SelectionModel> algUpdateSelect = [];
 
   @override
   Widget build(BuildContext context) {
     int curcolorindex = Provider.of<LastLayerProvider>(context).curMode;
-    late final List<String> templist;
+    late final List<String> currllNameList;
     late Map<String, String> defaultAlg;
     switch (ll) {
       case "PLL":
-        templist = PLLNAMES;
+        currllNameList = PLLNAMES;
         break;
       case "OLL":
-        templist = OLLNAMES;
+        currllNameList = OLLNAMES;
         break;
       case "COLL":
-        templist = COLLNAMES;
+        currllNameList = COLLNAMES;
         break;
       default:
         print("ll");
@@ -54,7 +56,7 @@ class llSelectList extends StatelessWidget {
         print("ll");
     }
     List<LLSelectViewModel> times = [];
-    for (var llname in templist) {
+    for (var llname in currllNameList) {
       final element = LLSelectViewModel(
         img: "assets/$ll/$llname.png",
         name: llname,
@@ -74,6 +76,7 @@ class llSelectList extends StatelessWidget {
         return false;
       },
       child: Scaffold(
+        floatingActionButton: AlgSelectSaveBtn(controller: controller),
         body: SafeArea(
             child: CustomAppBar(
           appBarColor: _Mode[curcolorindex],
@@ -92,7 +95,7 @@ class llSelectList extends StatelessWidget {
             },
           ),
           child: FutureBuilder<List<SelectionModel>>(
-            future: getllList(templist, ll),
+            future: getllList(currllNameList, ll),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return SliverList(
@@ -122,10 +125,9 @@ class llSelectList extends StatelessWidget {
     );
   }
 
-  Future<List<SelectionModel>> getllList(
-      List<String> templist, String ll) async {
+  Future<List<SelectionModel>> getllList(List<String> curllNameList, String ll) async {
     List<SelectionModel> times = [];
-    for (var llname in templist) {
+    for (var llname in curllNameList) {
       final element =
           SelectionModel(llcase: llname, lltype: ll, selectionType: 0);
       times.add(element);

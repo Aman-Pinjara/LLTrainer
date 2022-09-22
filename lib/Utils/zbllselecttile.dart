@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/Models/SelectionModel.dart';
+import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
 import 'package:lltrainer/Utils/ZBLLTypeSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
+import 'package:provider/provider.dart';
 
 class ZBLLSelectTile extends StatefulWidget {
   final SelectionModel curlltype;
-  const ZBLLSelectTile({required this.curlltype, Key? key}) : super(key: key);
+  final List<SelectionModel> llTypeCases;
+  const ZBLLSelectTile(
+      {required this.llTypeCases, required this.curlltype, Key? key})
+      : super(key: key);
 
   @override
   State<ZBLLSelectTile> createState() => _ZBLLSelectTileState();
@@ -53,6 +57,15 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
         onDoubleTap: () {
           setState(() {
             i = (i + 1) % colorarr.length;
+            Provider.of<SelectionListUpdateProvider>(context, listen: false).addAllSelection(
+                widget
+                    .llTypeCases
+                    .map((e) => SelectionModel(
+                        llcase: e.llcase,
+                        lltype: e.lltype,
+                        selectionType: i,
+                        alg: e.alg))
+                    .toList());
           });
         },
         onTap: () {
@@ -93,93 +106,72 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
     );
   }
 
-  Future<Map<String,int>> getSelectionFromDb(List<LLSelectViewModel> curcases)async{
-    Map<String,int> timesMap = {};
-    List<SelectionModel> times = await Selectiondb.instance.getSelections("ZBLL");
-    for (var element in curcases) {
-      timesMap[element.name] = times[times.indexWhere((timeselement) => timeselement.llcase==element.name)].selectionType;
-    }
-    return timesMap;
-  }
-
   void dialog(BuildContext context, List<LLSelectViewModel> times) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r)),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                child: Column(
-                  children: [
-                    Material(
-                      elevation: 5,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                            border:
-                                Border(bottom: BorderSide(color: Colors.grey))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: ZBLLTHEME,
-                                  )),
-                              Text(
-                                widget.curlltype.llcase,
-                                style: TextStyle(
-                                  fontSize: 17.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
+      context: context,
+      builder: (context) {
+        return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r)),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 12.h),
+              child: Column(
+                children: [
+                  Material(
+                    elevation: 5,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          border:
+                              Border(bottom: BorderSide(color: Colors.grey))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: ZBLLTHEME,
+                                )),
+                            Text(
+                              widget.curlltype.llcase,
+                              style: TextStyle(
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w500,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: FutureBuilder<Map<String, int>>(
-                        future: getSelectionFromDb(times),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return RawScrollbar(
-                              thumbColor: ZBLLTHEME,
-                              thumbVisibility: true,
-                              radius: const Radius.circular(5),
-                              thickness: 6,
-                              child: ListView.builder(
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: times.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return ZBLLTypeSelectTile(
-                                      zb: times[index],
-                                      selection:
-                                          snapshot.data![times[index].name]!);
-                                },
-                              ),
-                            );
-                          }
-                          if (snapshot.hasData) {
-                            return const Center(
-                              child: Text("There was some error"),
-                            );
-                          }
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      ),
+                  ),
+                  Expanded(
+                      child: RawScrollbar(
+                    thumbColor: ZBLLTHEME,
+                    thumbVisibility: true,
+                    radius: const Radius.circular(5),
+                    thickness: 6,
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: times.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ZBLLTypeSelectTile(
+                            zb: times[index],
+                            selection: widget
+                                .llTypeCases[widget.llTypeCases.indexWhere(
+                                    (element) =>
+                                        element.llcase == times[index].name)]
+                                .selectionType);
+                      },
                     ),
-                  ],
-                ),
-              ));
-        },);
+                  )),
+                ],
+              ),
+            ));
+      },
+    );
   }
 }
