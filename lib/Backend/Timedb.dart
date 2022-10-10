@@ -37,11 +37,19 @@ class Timedb {
 
   Future<List<TimeModel>> getllTime(String lltype) async {
     final db = await instance.database;
-    print(db);
     final times = await db.query(TIMESTABLENAME,
         where: "${TimeModelDBFields.lltype} = ?",
         whereArgs: [lltype],
         orderBy: "${TimeModelDBFields.id} DESC");
+    return times.map((e) => TimeModel.fromJson(e)).toList();
+  }
+
+  Future<List<TimeModel>> getllcaseTime(String llcase) async {
+    final db = await instance.database;
+    final times = await db.query(TIMESTABLENAME,
+        where: "${TimeModelDBFields.llcase} = ?",
+        whereArgs: [llcase],
+        orderBy: "${TimeModelDBFields.time} DESC");
     return times.map((e) => TimeModel.fromJson(e)).toList();
   }
 

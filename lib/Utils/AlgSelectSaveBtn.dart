@@ -31,14 +31,14 @@ class _AlgSelectSaveBtnState extends State<AlgSelectSaveBtn> {
             await Selectiondb.instance.updateSelections(selection);
           }
           if (widget.controller.hasClients) {
-                widget.controller.animateToPage(
-                  1,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeInOut,
-                );
-              }
+            widget.controller.animateToPage(
+              1,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+            );
+          }
         },
-        child: const Icon(Icons.save_alt_rounded),
+        child: const Icon(Icons.save_outlined),
       ),
     );
   }

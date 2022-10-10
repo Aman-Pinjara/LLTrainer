@@ -50,7 +50,7 @@ class Selectiondb {
         SelectionModel(
           llcase: element,
           lltype: "OLL",
-          selectionType: 2,
+          selectionType: 0,
         ),
       );
     }
@@ -60,7 +60,7 @@ class Selectiondb {
         SelectionModel(
           llcase: element,
           lltype: "COLL",
-          selectionType: 2,
+          selectionType: 0,
         ),
       );
     }
@@ -70,7 +70,7 @@ class Selectiondb {
         SelectionModel(
           llcase: element,
           lltype: "ZBLL",
-          selectionType: 2,
+          selectionType: 0,
         ),
       );
     }
@@ -92,7 +92,7 @@ class Selectiondb {
 
   Future<void> updateSelections(SelectionModel selection) async {
     final db = await instance.database;
-    await db.update(SELECTIONTABLENAME, selection.toJson(),
+    db.update(SELECTIONTABLENAME, selection.toJson(),
         where: "${SelectionModelDBFields.llcase} = ?",
         whereArgs: [selection.llcase]);
   }
