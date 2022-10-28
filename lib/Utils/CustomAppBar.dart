@@ -8,12 +8,13 @@ class CustomAppBar extends StatelessWidget {
   final Widget leading;
   final String titleText;
   final Color appBarColor;
+  final List<Widget>? actions;
   const CustomAppBar(
       {required this.leading,
       required this.child,
       required this.titleText,
       required this.appBarColor,
-      Key? key})
+      Key? key, this.actions})
       : super(key: key);
 
   @override
@@ -30,6 +31,7 @@ class CustomAppBar extends StatelessWidget {
             SliverAppBar(
               backgroundColor: appBarColor,
               leading: leading,
+              actions: actions,
               pinned: true,
               expandedHeight: 130.h,
               flexibleSpace: FlexibleSpaceBar(

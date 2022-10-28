@@ -29,10 +29,10 @@ class Timedb {
       )''');
   }
 
-  Future<TimeModel> insertInDB(TimeModel timeObj) async {
+  Future<int> insertInDB(TimeModel timeObj) async {
     final db = await instance.database;
     final id = await db.insert(TIMESTABLENAME, timeObj.toJson());
-    return timeObj.copy(id: id);
+    return id;
   }
 
   Future<List<TimeModel>> getllTime(String lltype) async {
@@ -57,5 +57,17 @@ class Timedb {
     final db = await instance.database;
     await db.delete(TIMESTABLENAME,
         where: "${TimeModelDBFields.id} = ?", whereArgs: [id]);
+  }
+
+  Future<List<TimeModel>> getXlenghtdata(String lltype, int x) async {
+    final db = await instance.database;
+    final times = await db.query(
+      TIMESTABLENAME,
+      where: "${TimeModelDBFields.lltype} = ?",
+      whereArgs: [lltype],
+      limit: x,
+      orderBy: "${TimeModelDBFields.id} DESC",
+    );
+    return times.map((e) => TimeModel.fromJson(e)).toList();
   }
 }

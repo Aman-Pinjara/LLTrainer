@@ -90,6 +90,16 @@ class Selectiondb {
     return selection.map((e) => SelectionModel.fromJson(e)).toList();
   }
 
+  Future<String?> getSelectionAlg(String lltype, String llcase) async {
+    final db = await instance.database;
+    final selection = await db.query(
+      SELECTIONTABLENAME,
+      where: "${SelectionModelDBFields.llcase} = ?",
+      whereArgs: [llcase],
+    );
+    return SelectionModel.fromJson(selection[0]).alg;
+  }
+
   Future<void> updateSelections(SelectionModel selection) async {
     final db = await instance.database;
     db.update(SELECTIONTABLENAME, selection.toJson(),

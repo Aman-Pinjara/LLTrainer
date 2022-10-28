@@ -4,9 +4,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lltrainer/AlgLists/DefautlAlgs.dart';
+import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Backend/Timedb.dart';
 import 'package:lltrainer/Models/ScrambleData.dart';
 import 'package:lltrainer/Models/TimeModel.dart';
+import 'package:lltrainer/Screens/SelectAlgs/llSelectList.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +34,7 @@ class _TimerScreenState extends State<TimerScreen> {
   bool timeron = false;
   late Stopwatch time;
   int timerColor = 0;
+  int? toDeleteId;
 
   @override
   void initState() {
@@ -47,18 +53,19 @@ class _TimerScreenState extends State<TimerScreen> {
     String ll = Provider.of<LastLayerProvider>(context).ll;
     scramble = timeron ? scramble : GenerateScramble().scramble(ll);
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         //stop timer if started
         if (timeron) {
           setState(() {
             time.stop();
           });
-          print("test ${scramble.llcase}");
-          Timedb.instance.insertInDB(TimeModel(
-              lltype: ll,
-              llcase: scramble.llcase,
-              time: double.parse(
-                  (time.elapsedMilliseconds / 1000).toStringAsFixed(2))));
+          // print("test ${scramble.llcase}");
+          toDeleteId = await Timedb.instance.insertInDB(TimeModel(
+            lltype: ll,
+            llcase: scramble.llcase,
+            time: double.parse(
+                (time.elapsedMilliseconds / 1000).toStringFixed(2)),
+          ));
         }
       },
       onLongPress: () {
@@ -126,17 +133,44 @@ class _TimerScreenState extends State<TimerScreen> {
                         ),
                       ),
                       Visibility(
-                          maintainSize: true,
-                          maintainState: true,
-                          maintainAnimation: true,
-                          visible: !timeron,
-                          child: timesView(curMode, "Avg :", "12.232")),
+                        maintainSize: true,
+                        maintainState: true,
+                        maintainAnimation: true,
+                        visible: !timeron,
+                        child: FutureBuilder<String>(
+                            future: getxavg(_ModeName[curMode], 10),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return timesView(
+                                    curMode, "Avg 10: ", snapshot.data!);
+                              }
+                              if (snapshot.hasError) {
+                                return Text("error");
+                              }
+                              return timesView(curMode, "Avg 10: ", "Loading");
+                            }),
+                      ),
                       Visibility(
-                          maintainSize: true,
-                          maintainState: true,
-                          maintainAnimation: true,
-                          visible: !timeron,
-                          child: timesView(curMode, "Best :", "12.232")),
+                        maintainSize: true,
+                        maintainState: true,
+                        maintainAnimation: true,
+                        visible: !timeron,
+                        child: FutureBuilder<String>(
+                            future: getxavg(_ModeName[curMode], 20),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return timesView(
+                                  curMode,
+                                  "Avg 20: ",
+                                  snapshot.data!,
+                                );
+                              }
+                              if (snapshot.hasError) {
+                                return Text("error");
+                              }
+                              return timesView(curMode, "Avg 20: ", "Loading");
+                            }),
+                      ),
                       SizedBox(
                         height: 20.h,
                       ),
@@ -166,12 +200,6 @@ class _TimerScreenState extends State<TimerScreen> {
       ),
     );
   }
-
-  // void updateScramble(String ll) {
-  //   setState(() {
-  //     scramble = GenerateScramble().scramble(ll);
-  //   });
-  // }
 
   Icon lockIcon(BuildContext context) {
     return Icon(
@@ -234,7 +262,24 @@ class _TimerScreenState extends State<TimerScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          onPressed: () {},
+          onPressed: () async {
+            if (toDeleteId != null) {
+              await Timedb.instance.deleteFromDb(toDeleteId!);
+              toDeleteId = null;
+              setState(() {
+                time.reset();
+              });
+              Fluttertoast.showToast(
+                msg: "Deleted successfully",
+                backgroundColor: Colors.black.withOpacity(0.5),
+              );
+            } else {
+              Fluttertoast.showToast(
+                msg: "Nothing to Delete",
+                backgroundColor: Colors.black.withOpacity(0.5),
+              );
+            }
+          },
           icon: Icon(
             Icons.delete,
             color: _Mode[curMode],
@@ -245,7 +290,86 @@ class _TimerScreenState extends State<TimerScreen> {
           width: 12.w,
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () async {
+            showDialog(
+                context: context,
+                builder: ((context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "${scramble.ll} ${scramble.llcase}",
+                            style: TextStyle(
+                                fontSize: 15.sp, fontWeight: FontWeight.w700),
+                          ),
+                          Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                height: 70.h,
+                                width: 70.h,
+                                child: _ModeName[curMode] == "ZBLL"
+                                    ? SvgPicture.asset(
+                                        "assets/ZBLL/${scramble.llcase}.svg")
+                                    : Image.asset(
+                                        "assets/${scramble.ll}/${scramble.llcase}.png"),
+                              ),
+                              Expanded(
+                                child: FutureBuilder<String?>(
+                                    future: Selectiondb.instance
+                                        .getSelectionAlg(_ModeName[curMode],
+                                            scramble.llcase),
+                                    builder: (context, snapshot) {
+                                      late final String defalg;
+                                      switch (_ModeName[curMode]) {
+                                        case "PLL":
+                                          defalg =
+                                              DefaultAlgs.pll[scramble.llcase]!;
+                                          break;
+                                        case "OLL":
+                                          defalg =
+                                              DefaultAlgs.oll[scramble.llcase]!;
+                                          break;
+                                        case "COLL":
+                                          defalg = DefaultAlgs
+                                              .coll[scramble.llcase]!;
+                                          break;
+                                        case "ZBLL":
+                                          defalg = DefaultAlgs
+                                              .zbll[scramble.llcase]!;
+                                          break;
+                                      }
+                                      if (!snapshot.hasData) {
+                                        return Text(
+                                          snapshot.data ?? defalg,
+                                          textAlign: TextAlign.center,
+                                        );
+                                      }
+                                      if (snapshot.hasError) {
+                                        return Text("Some error occured");
+                                      }
+                                      return CircularProgressIndicator();
+                                    }),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: Icon(Icons.done, color: _Mode[curMode]),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }));
+          },
           style: ButtonStyle(
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
@@ -266,6 +390,17 @@ class _TimerScreenState extends State<TimerScreen> {
         ),
       ],
     );
+  }
+
+  Future<String> getxavg(String lltype, int x) async {
+    final times = await Timedb.instance.getXlenghtdata(lltype, x);
+    if (times.length < x) {
+      return "--:--";
+    }
+    return (times.fold<double>(
+                0, (previousValue, element) => previousValue + element.time) /
+            x)
+        .toStringFixed(3);
   }
 
   Padding timesView(int curMode, String name, String val) {
@@ -315,5 +450,12 @@ class _TimerScreenState extends State<TimerScreen> {
         ),
       ),
     );
+  }
+}
+
+extension on double {
+  String toStringFixed(int limit) {
+    final val = toStringAsFixed(limit + 1);
+    return val.substring(0, val.length - 1);
   }
 }

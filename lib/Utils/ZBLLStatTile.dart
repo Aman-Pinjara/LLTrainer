@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lltrainer/Models/LLViewModel.dart';
+import 'package:lltrainer/Models/TimeModel.dart';
 import 'package:lltrainer/Utils/ZBLLTypeStatTile.dart';
 
 import '../Backend/Timedb.dart';
@@ -10,7 +11,10 @@ import '../my_colors.dart';
 
 class ZBLLStatTile extends StatelessWidget {
   final LLViewModel zbType;
-  const ZBLLStatTile({required this.zbType, Key? key}) : super(key: key);
+  final List<TimeModel> zbTypeTimes;
+  const ZBLLStatTile(
+      {required this.zbType, Key? key, required this.zbTypeTimes})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +99,7 @@ class ZBLLStatTile extends StatelessWidget {
   }
 
   void dialog(BuildContext context, List<LLViewModel> times) {
+    List<LLViewModel> times = llCasesTimes();
     showDialog(
       context: context,
       builder: (context) {
@@ -141,28 +146,20 @@ class ZBLLStatTile extends StatelessWidget {
                     thumbVisibility: true,
                     radius: const Radius.circular(5),
                     thickness: 6,
-                    child: FutureBuilder<List<LLViewModel>>(
-                        future: llCasesTimes(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ZBLLTypeStatTile(
-                                    zb: snapshot.data![index]);
-                              },
-                            );
-                          }
-                          if (snapshot.hasError) {
-                            return ListView(
-                              children: [Text("Some error occured")],
-                            );
-                          }
-                          return ListView(
-                            children: [Container()],
-                          );
-                        }),
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: times.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ZBLLTypeStatTile(
+                          zb: times[index],
+                          modeColor: ZBLLTHEME,
+                          timeData: zbTypeTimes
+                              .where((element) =>
+                                  element.llcase == times[index].name)
+                              .toList(),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -173,13 +170,14 @@ class ZBLLStatTile extends StatelessWidget {
     );
   }
 
-  Future<List<LLViewModel>> llCasesTimes() async {
+  List<LLViewModel> llCasesTimes() {
     final List<LLViewModel> times = [];
     bool conout = false;
     for (var llcase in ZBLLNAMES) {
       if (llcase.startsWith("${zbType.name}-")) {
         conout = true;
-        final statlist = await Timedb.instance.getllcaseTime(llcase);
+        final statlist =
+            zbTypeTimes.where((element) => element.llcase == llcase).toList();
         final element = LLViewModel(
           img: "assets/ZBLL/$llcase.svg",
           name: llcase,

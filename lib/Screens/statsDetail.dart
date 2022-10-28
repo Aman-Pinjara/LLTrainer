@@ -25,11 +25,12 @@ class StatsDetail extends StatefulWidget {
 }
 
 class _StatsDetailState extends State<StatsDetail> {
-
   @override
   void initState() {
     super.initState();
   }
+
+  late List<TimeModel> times;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +83,7 @@ class _StatsDetailState extends State<StatsDetail> {
                     future: Timedb.instance.getllTime(widget.ll),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
+                        times = snapshot.data!;
                         if (snapshot.data!.isEmpty) {
                           return Center(
                             child: Text("Do some solves to see your time here"),
@@ -133,11 +135,16 @@ class _StatsDetailState extends State<StatsDetail> {
                   )),
               child: InkWell(
                 onTap: () {
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) => LLBasicStatList(
+                  //           ll: widget.ll,
+                  //           appbarcolor: widget.llMode,
+                  //         )));
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => LLBasicStatList(
-                            ll: widget.ll,
-                            appbarcolor: widget.llMode,
-                          )));
+                          appbarcolor: widget.llMode,
+                          timeData: times,
+                          ll: widget.ll)));
                 },
                 child: SizedBox(
                   height: 75.w,
@@ -226,7 +233,6 @@ class _StatsDetailState extends State<StatsDetail> {
                                     await Timedb.instance
                                         .deleteFromDb(time.id!);
                                     setState(() {});
-                                    print("Deleted");
                                   },
                                   icon:
                                       Icon(Icons.delete, color: widget.llMode),
