@@ -33,47 +33,46 @@ class Selectiondb {
         ${SelectionModelDBFields.selectionType} INTEGER NOT NULL,
         ${SelectionModelDBFields.alg} TEXT
       )''');
-
-    for (var element in PLLNAMES) {
-      await insertDefaults(
-        database,
-        SelectionModel(
-          llcase: element,
-          lltype: "PLL",
-          selectionType: 2,
-        ),
-      );
-    }
-    for (var element in OLLNAMES) {
-      await insertDefaults(
-        database,
-        SelectionModel(
-          llcase: element,
-          lltype: "OLL",
-          selectionType: 0,
-        ),
-      );
-    }
-    for (var element in COLLNAMES) {
-      await insertDefaults(
-        database,
-        SelectionModel(
-          llcase: element,
-          lltype: "COLL",
-          selectionType: 0,
-        ),
-      );
-    }
-    for (var element in ZBLLNAMES) {
-      await insertDefaults(
-        database,
-        SelectionModel(
-          llcase: element,
-          lltype: "ZBLL",
-          selectionType: 0,
-        ),
-      );
-    }
+    await Future.wait(
+      [
+        for (var element in PLLNAMES)
+          insertDefaults(
+            database,
+            SelectionModel(
+              llcase: element,
+              lltype: "PLL",
+              selectionType: 0,
+            ),
+          ),
+        for (var element in OLLNAMES)
+          insertDefaults(
+            database,
+            SelectionModel(
+              llcase: element,
+              lltype: "OLL",
+              selectionType: 0,
+            ),
+          ),
+        for (var element in COLLNAMES)
+          insertDefaults(
+            database,
+            SelectionModel(
+              llcase: element,
+              lltype: "COLL",
+              selectionType: 0,
+            ),
+          ),
+        for (var element in ZBLLNAMES)
+          insertDefaults(
+            database,
+            SelectionModel(
+              llcase: element,
+              lltype: "ZBLL",
+              selectionType: 0,
+            ),
+          ),
+      ],
+    );
   }
 
   static Future insertDefaults(Database db, SelectionModel selection) async {

@@ -11,7 +11,6 @@ import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Backend/Timedb.dart';
 import 'package:lltrainer/Models/ScrambleData.dart';
 import 'package:lltrainer/Models/TimeModel.dart';
-import 'package:lltrainer/Screens/SelectAlgs/llSelectList.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +31,7 @@ class _TimerScreenState extends State<TimerScreen> {
   final _ModeName = ["PLL", "OLL", "COLL", "ZBLL"];
   bool isLock = false;
   bool timeron = false;
+  bool newScramble = true;
   late Stopwatch time;
   int timerColor = 0;
   int? toDeleteId;
@@ -51,13 +51,17 @@ class _TimerScreenState extends State<TimerScreen> {
     ];
     int curMode = Provider.of<LastLayerProvider>(context).curMode;
     String ll = Provider.of<LastLayerProvider>(context).ll;
-    scramble = timeron ? scramble : GenerateScramble().scramble(ll);
+    if (newScramble) {
+      scramble = GenerateScramble().scramble(ll);
+      newScramble = false;
+    }
     return GestureDetector(
       onTap: () async {
         //stop timer if started
         if (timeron) {
           setState(() {
             time.stop();
+            newScramble = true;
           });
           // print("test ${scramble.llcase}");
           toDeleteId = await Timedb.instance.insertInDB(TimeModel(
@@ -232,6 +236,7 @@ class _TimerScreenState extends State<TimerScreen> {
         onTap: () {
           !isLock
               ? setState(() {
+                  newScramble = true;
                   curMode = (curMode + 1) % _Mode.length;
                   Provider.of<LastLayerProvider>(context, listen: false)
                       .changeLL(_ModeName[curMode], curMode);
