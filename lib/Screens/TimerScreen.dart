@@ -11,6 +11,7 @@ import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Backend/Timedb.dart';
 import 'package:lltrainer/Models/ScrambleData.dart';
 import 'package:lltrainer/Models/TimeModel.dart';
+import 'package:lltrainer/MyProvider/ScrambleProvider.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +41,17 @@ class _TimerScreenState extends State<TimerScreen> {
   void initState() {
     super.initState();
     time = Stopwatch();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<ScrambleProvider>(context, listen: false).resetList();
+    });
+  }
+
+  Future<String> getScramble(String ll) async {
+    if (newScramble) {
+      scramble = await GenerateScramble().scramble(ll, context);
+      newScramble = false;
+    }
+    return scramble.scramble;
   }
 
   @override
@@ -51,10 +63,6 @@ class _TimerScreenState extends State<TimerScreen> {
     ];
     int curMode = Provider.of<LastLayerProvider>(context).curMode;
     String ll = Provider.of<LastLayerProvider>(context).ll;
-    if (newScramble) {
-      scramble = GenerateScramble().scramble(ll);
-      newScramble = false;
-    }
     return GestureDetector(
       onTap: () async {
         //stop timer if started
@@ -240,6 +248,8 @@ class _TimerScreenState extends State<TimerScreen> {
                   curMode = (curMode + 1) % _Mode.length;
                   Provider.of<LastLayerProvider>(context, listen: false)
                       .changeLL(_ModeName[curMode], curMode);
+                  Provider.of<ScrambleProvider>(context, listen: false)
+                      .resetList();
                 })
               : null;
         },
@@ -443,14 +453,29 @@ class _TimerScreenState extends State<TimerScreen> {
         child: Center(
           child: SizedBox(
             width: 200.w,
-            child: Text(
-              textAlign: TextAlign.center,
-              scramble.scramble,
-              style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 17.5.sp,
-                  fontWeight: FontWeight.w500),
-            ),
+            child: FutureBuilder<String>(
+                future: getScramble(ll),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                    default:
+                      if (snapshot.hasData) {
+                        return Text(
+                          textAlign: TextAlign.center,
+                          snapshot.data!,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 17.5.sp,
+                              fontWeight: FontWeight.w500),
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Text("There is some error");
+                      }
+                      return Center(child: Text("No data"));
+                  }
+                }),
           ),
         ),
       ),

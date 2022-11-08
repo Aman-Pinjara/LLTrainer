@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Models/SelectionModel.dart';
+import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
 import 'package:lltrainer/Utils/AlgSelectSaveBtn.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
 import 'package:lltrainer/Utils/ZBLLSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
+import 'package:provider/provider.dart';
 
 class ZBLLSelectList extends StatelessWidget {
   final PageController controller;
@@ -15,6 +17,7 @@ class ZBLLSelectList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<SelectionStateProvider>(context, listen: false).clearState();
     return WillPopScope(
       onWillPop: () async {
         if (controller.hasClients) {
@@ -27,7 +30,6 @@ class ZBLLSelectList extends StatelessWidget {
         return false;
       },
       child: Scaffold(
-        floatingActionButton: AlgSelectSaveBtn(controller: controller,),
         body: SafeArea(
             child: CustomAppBar(
           appBarColor: ZBLLTHEME,

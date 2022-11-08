@@ -5,6 +5,7 @@ import 'package:lltrainer/AlgLists/DefautlAlgs.dart';
 import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/MyProvider/LastLayerProvier.dart';
+import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
 import 'package:lltrainer/Utils/AlgSelectSaveBtn.dart';
 import 'package:lltrainer/Utils/AlgSelectTile.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
@@ -27,6 +28,7 @@ class llSelectList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int curcolorindex = Provider.of<LastLayerProvider>(context).curMode;
+    Provider.of<SelectionStateProvider>(context, listen: false).clearState();
     late final List<String> currllNameList;
     late Map<String, String> defaultAlg;
     switch (ll) {
@@ -76,7 +78,6 @@ class llSelectList extends StatelessWidget {
         return false;
       },
       child: Scaffold(
-        floatingActionButton: AlgSelectSaveBtn(controller: controller),
         body: SafeArea(
             child: CustomAppBar(
           appBarColor: _Mode[curcolorindex],
@@ -125,7 +126,8 @@ class llSelectList extends StatelessWidget {
     );
   }
 
-  Future<List<SelectionModel>> getllList(List<String> curllNameList, String ll) async {
+  Future<List<SelectionModel>> getllList(
+      List<String> curllNameList, String ll) async {
     List<SelectionModel> times = [];
     for (var llname in curllNameList) {
       final element =

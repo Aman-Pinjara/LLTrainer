@@ -2,22 +2,29 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lltrainer/MyProvider/ScrambleProvider.dart';
 import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
+import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
 import 'package:lltrainer/Screens/SelectAlgs/Selection.dart';
 import 'package:lltrainer/Screens/TimesViewPage.dart';
 import 'package:lltrainer/custom_theme.dart';
 import 'package:lltrainer/Screens/TimerScreen.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'MyProvider/LastLayerProvier.dart';
 import 'MyProvider/LockScrollProvier.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('settings');
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => LockScrollProvider()),
     ChangeNotifierProvider(create: (_) => LastLayerProvider()),
-    ChangeNotifierProvider(create: (_) => SelectionListUpdateProvider())
+    ChangeNotifierProvider(create: (_) => SelectionListUpdateProvider()),
+    ChangeNotifierProvider(create: (_) => SelectionStateProvider()),
+    ChangeNotifierProvider(create: (_) => ScrambleProvider()),
   ], child: const MyApp()));
 }
 
@@ -52,11 +59,15 @@ class MyApp extends StatelessWidget {
               physics: dontScroll ? NeverScrollableScrollPhysics() : null,
               controller: _controller,
               children: [
-                Selection(controller: _controller,),
+                Selection(
+                  controller: _controller,
+                ),
                 TimerScreen(),
               ],
             ),
-            TimesViewPage(controller: timeviewcontroller,)
+            TimesViewPage(
+              controller: timeviewcontroller,
+            )
           ],
         ),
       ),

@@ -89,6 +89,16 @@ class Selectiondb {
     return selection.map((e) => SelectionModel.fromJson(e)).toList();
   }
 
+  Future<List<SelectionModel>> filterSelections(String lltype, int sel) async {
+    final db = await instance.database;
+    final selection = await db.query(
+      SELECTIONTABLENAME,
+      where: "${SelectionModelDBFields.lltype} = ? and ${SelectionModelDBFields.selectionType} = ?",
+      whereArgs: [lltype,sel.toString()],
+    );
+    return selection.map((e) => SelectionModel.fromJson(e)).toList();
+  }
+
   Future<String?> getSelectionAlg(String lltype, String llcase) async {
     final db = await instance.database;
     final selection = await db.query(
@@ -99,10 +109,14 @@ class Selectiondb {
     return SelectionModel.fromJson(selection[0]).alg;
   }
 
-  Future<void> updateSelections(SelectionModel selection) async {
+  Future<void> updateSelection(SelectionModel selection) async {
     final db = await instance.database;
     db.update(SELECTIONTABLENAME, selection.toJson(),
         where: "${SelectionModelDBFields.llcase} = ?",
         whereArgs: [selection.llcase]);
+  }
+
+  Future<void> updateAllSelecition(List<SelectionModel> selectionList) async {
+    await Future.wait(selectionList.map((e) => updateSelection(e)));
   }
 }

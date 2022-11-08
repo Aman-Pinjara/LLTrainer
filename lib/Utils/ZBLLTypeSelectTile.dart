@@ -8,6 +8,9 @@ import 'package:lltrainer/Models/SelectionModel.dart';
 import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
 import 'package:provider/provider.dart';
 
+import '../Backend/Selectiondb.dart';
+import '../MyProvider/SelectionStateProvider.dart';
+
 class ZBLLTypeSelectTile extends StatefulWidget {
   final LLSelectViewModel zb;
   final int selection;
@@ -36,6 +39,11 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, SelectionModel> newState =
+        Provider.of<SelectionStateProvider>(context).currStateChanges;
+    if (newState[widget.zb.name] != null || newState[widget.zb.name.split("-").getRange(0, 2).join("-")]!=null) {
+      i = newState[widget.zb.name]?.selectionType ?? newState[widget.zb.name.split("-").getRange(0, 2).join("-")]!.selectionType;
+    }
     final colorarr = [
       Theme.of(context).primaryColorDark,
       Theme.of(context).colorScheme.tertiaryContainer,
@@ -49,15 +57,24 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
           setState(() {
             i = (i + 1) % colorarr.length;
           });
-          Provider.of<SelectionListUpdateProvider>(context, listen: false)
-              .addSelection(
-            SelectionModel(
+          final newSelection = SelectionModel(
               llcase: widget.zb.name,
               lltype: "ZBLL",
               selectionType: i,
               alg: widget.zb.alg,
-            ),
-          );
+            );
+            Provider.of<SelectionStateProvider>(context, listen: false)
+                .addState(newSelection);
+            Selectiondb.instance.updateSelection(newSelection);
+          // Provider.of<SelectionListUpdateProvider>(context, listen: false)
+          //     .addSelection(
+          //   SelectionModel(
+          //     llcase: widget.zb.name,
+          //     lltype: "ZBLL",
+          //     selectionType: i,
+          //     alg: widget.zb.alg,
+          //   ),
+          // );
         },
         child: Container(
           decoration: BoxDecoration(
@@ -90,13 +107,16 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: GestureDetector(
-                  onTap: () {
-                    AlgEditDialog(context);
+                  onTap: () async{
+                    String? alg = await AlgEditDialog(context);
+                    if(alg!=null){
+                      setState(() {});
+                    }
                   },
                   child: SizedBox(
                     width: 125.w,
                     child: Text(
-                      widget.zb.alg,
+                      newState[widget.zb.name]?.alg ?? widget.zb.alg,
                       style: TextStyle(
                           fontSize: 12.sp, fontWeight: FontWeight.w400),
                       textAlign: TextAlign.center,
@@ -111,12 +131,12 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
     );
   }
 
-  void AlgEditDialog(BuildContext context) {
-    showDialog(
+  Future<String?> AlgEditDialog(BuildContext context) {
+    return showDialog<String?>(
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: const Text("Enter new alg"),
+          title: Text("Alg for ${widget.zb.name}"),
           children: [
             Padding(
               padding: const EdgeInsets.all(12.0),
@@ -144,7 +164,19 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
                     )),
                 TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(_controller.text);
+                    if (_controller.text.isNotEmpty) {
+                      final newSelection = SelectionModel(
+                        llcase: widget.zb.name,
+                        lltype: "ZBLL",
+                        selectionType: i,
+                        alg: _controller.text,
+                      );
+                      Provider.of<SelectionStateProvider>(context,
+                              listen: false)
+                          .addState(newSelection);
+                      Selectiondb.instance.updateSelection(newSelection);
+                    }
                     },
                     child: Text("OK",
                         style: TextStyle(

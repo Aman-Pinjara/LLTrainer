@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lltrainer/Backend/Selectiondb.dart';
+import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
 
@@ -30,6 +31,11 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, SelectionModel> newState =
+        Provider.of<SelectionStateProvider>(context).currStateChanges;
+    if (newState[widget.curll.llcase] != null) {
+      i = newState[widget.curll.llcase]!.selectionType;
+    }
     final colorarr = [
       Theme.of(context).primaryColorDark,
       Theme.of(context).colorScheme.tertiaryContainer,
@@ -39,20 +45,29 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
       child: GestureDetector(
-        onTap: () async {
+        onTap: () {
           setState(() {
             i = (i + 1) % colorarr.length;
-           
-              Provider.of<SelectionListUpdateProvider>(context, listen: false)
-                  .addSelection(
-                SelectionModel(
-                  llcase: widget.curll.llcase,
-                  lltype: widget.curll.lltype,
-                  selectionType: i,
-                  alg: widget.curll.alg,
-                ),
-              );
+
+            // Provider.of<SelectionListUpdateProvider>(context, listen: false)
+            //     .addSelection(
+            //   SelectionModel(
+            //     llcase: widget.curll.llcase,
+            //     lltype: widget.curll.lltype,
+            //     selectionType: i,
+            //     alg: widget.curll.alg,
+            //   ),
+            // )updateSelection
           });
+            final newSelection = SelectionModel(
+              llcase: widget.curll.llcase,
+              lltype: widget.curll.lltype,
+              selectionType: i,
+              alg: widget.curll.alg,
+            );
+            Provider.of<SelectionStateProvider>(context, listen: false)
+                .addState(newSelection);
+            Selectiondb.instance.updateSelection(newSelection);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -81,13 +96,18 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: GestureDetector(
-                  onTap: () {
-                    AlgEditDialog(context);
+                  onTap: () async {
+                    String? alg = await AlgEditDialog(context);
+                    if (alg != null) {
+                      setState(() {});
+                    }
                   },
                   child: SizedBox(
                     width: 125.w,
                     child: Text(
-                      widget.curll.alg ?? widget.defaultAlg,
+                      newState[widget.curll.llcase]?.alg ??
+                          widget.curll.alg ??
+                          widget.defaultAlg,
                       style: TextStyle(fontSize: 12.sp),
                       textAlign: TextAlign.center,
                     ),
@@ -101,12 +121,12 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
     );
   }
 
-  void AlgEditDialog(BuildContext context) {
-    showDialog(
+  Future<String?> AlgEditDialog(BuildContext context) {
+    return showDialog<String?>(
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: const Text("Enter new alg"),
+          title: Text("Alg for ${widget.curll.llcase}"),
           children: [
             Padding(
               padding: const EdgeInsets.all(12.0),
@@ -134,17 +154,19 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
                           color: Theme.of(context).colorScheme.onSecondary),
                     )),
                 TextButton(
-                  onPressed: () async {
-                    Navigator.of(context).pop();
+                  onPressed: () {
+                    Navigator.of(context).pop(_controller.text);
                     if (_controller.text.isNotEmpty) {
-                      await Selectiondb.instance.updateSelections(
-                        SelectionModel(
-                          llcase: widget.curll.llcase,
-                          lltype: widget.curll.lltype,
-                          selectionType: i,
-                          alg: _controller.text,
-                        ),
+                      final newSelection = SelectionModel(
+                        llcase: widget.curll.llcase,
+                        lltype: widget.curll.lltype,
+                        selectionType: i,
+                        alg: _controller.text,
                       );
+                      Provider.of<SelectionStateProvider>(context,
+                              listen: false)
+                          .addState(newSelection);
+                      Selectiondb.instance.updateSelection(newSelection);
                     }
                   },
                   child: Text(

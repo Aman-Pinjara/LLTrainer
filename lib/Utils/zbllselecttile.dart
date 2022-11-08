@@ -9,6 +9,9 @@ import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
 
+import '../Backend/Selectiondb.dart';
+import '../MyProvider/SelectionStateProvider.dart';
+
 class ZBLLSelectTile extends StatefulWidget {
   final SelectionModel curlltype;
   final List<SelectionModel> llTypeCases;
@@ -30,6 +33,11 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, SelectionModel> newState =
+        Provider.of<SelectionStateProvider>(context).currStateChanges;
+    if (newState[widget.curlltype.llcase] != null) {
+      i = newState[widget.curlltype.llcase]!.selectionType;
+    }
     List<LLSelectViewModel> times = [];
     bool conout = false;
     for (var element in ZBLLNAMES) {
@@ -37,7 +45,10 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
         LLSelectViewModel temp = LLSelectViewModel(
           img: "assets/ZBLL/$element.svg",
           name: element,
-          alg: "sorry ZB was too Long so no Default algs :,(",
+          alg: widget.llTypeCases
+                  .singleWhere((model) => element == model.llcase)
+                  .alg ??
+              "sorry ZB was too Long so no Default algs :,(",
         );
         times.add(temp);
         conout = true;
@@ -57,16 +68,36 @@ class _ZBLLSelectTileState extends State<ZBLLSelectTile> {
         onDoubleTap: () {
           setState(() {
             i = (i + 1) % colorarr.length;
-            Provider.of<SelectionListUpdateProvider>(context, listen: false).addAllSelection(
-                widget
-                    .llTypeCases
-                    .map((e) => SelectionModel(
-                        llcase: e.llcase,
-                        lltype: e.lltype,
-                        selectionType: i,
-                        alg: e.alg))
-                    .toList());
+
+            // Provider.of<SelectionListUpdateProvider>(context, listen: false).addAllSelection(
+            //     widget
+            //         .llTypeCases
+            //         .map((e) => SelectionModel(
+            //             llcase: e.llcase,
+            //             lltype: e.lltype,
+            //             selectionType: i,
+            //             alg: e.alg))
+            //         .toList());
           });
+          final newSelection = SelectionModel(
+            llcase: widget.curlltype.llcase,
+            lltype: widget.curlltype.lltype,
+            selectionType: i,
+            alg: widget.curlltype.alg,
+          );
+          Provider.of<SelectionStateProvider>(context, listen: false)
+              .addState(newSelection);
+          Selectiondb.instance.updateAllSelecition(ZBLLNAMES
+              .where((e) => e.startsWith(widget.curlltype.llcase))
+              .toList()
+              .map((e) => SelectionModel(
+                  llcase: e,
+                  lltype: "ZBLL",
+                  selectionType: i,
+                  alg: widget.llTypeCases
+                      .singleWhere((element) => element.llcase == e)
+                      .alg))
+              .toList());
         },
         onTap: () {
           dialog(context, times);

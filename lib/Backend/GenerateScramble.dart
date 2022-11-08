@@ -1,44 +1,75 @@
-// ignore_for_file: constant_identifier_names, non_constant_identifier_names
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lltrainer/AlgLists/OLLAlgs.dart';
 import 'package:lltrainer/AlgLists/PLLAlgs.dart';
 import 'package:lltrainer/AlgLists/COLLAlgs.dart';
 import 'package:lltrainer/AlgLists/ZBLLAlgs.dart';
+import 'package:lltrainer/Backend/Selectiondb.dart';
+import 'package:lltrainer/Backend/SettingsBox.dart';
 import 'package:lltrainer/Models/ScrambleData.dart';
+import 'package:lltrainer/MyProvider/ScrambleProvider.dart';
 import 'package:lltrainer/llnames/OLL.dart';
 import 'package:lltrainer/llnames/PLL.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/llnames/COLL.dart';
+import 'package:provider/provider.dart';
 
 class GenerateScramble {
-  ScrambleData scramble(String ll) {
+  Future<ScrambleData> scramble(String ll, BuildContext context) async {
     final Algmap = llgetmap(ll);
-    List<String> a = getCasesFromDb(ll);
+    if (Provider.of<ScrambleProvider>(context, listen: false)
+        .caselist
+        .isEmpty) {
+      await getCasesFromDb(ll,context);
+    }
+    List<String> a = Provider.of<ScrambleProvider>(context, listen: false).caselist;
     String llcase = a[Random().nextInt(a.length)];
     String alg = getRandomAlg(llcase, Algmap, ll);
-    print("case $llcase");
-    print("alg $alg");
+    // print("case $llcase");
+    // print("alg $alg");
     final scramble =
         ScrambleData(scramble: modify(alg), ll: ll, llcase: llcase);
     return scramble;
   }
 
-  static List<String> getCasesFromDb(String ll) {
+  static Future<void> getCasesFromDb(String ll, BuildContext context) async {
+    int selection = await SettingsBox().getLLSelectPref(ll);
+    late List<String> llnames;
     switch (ll) {
       case "PLL":
-        return PLLNAMES;
+        llnames = PLLNAMES;
+        break;
       case "OLL":
-        return OLLNAMES;
+        llnames = OLLNAMES;
+        break;
       case "COLL":
-        return COLLNAMES;
+        llnames = COLLNAMES;
+        break;
       case "ZBLL":
-        return ZBLLNAMES;
+        llnames = ZBLLNAMES;
+        break;
       default:
-        print(ll);
-        return PLLNAMES;
+        llnames = PLLNAMES;
+        break;
     }
+    if (selection == 0) {
+      Provider.of<ScrambleProvider>(context).updateList(llnames);
+      return;
+    }
+    final llnamesfromDB =
+        (await Selectiondb.instance.filterSelections(ll, selection))
+            .map((e) => e.llcase)
+            .toList();
+    if (llnamesfromDB.isEmpty) {
+      Fluttertoast.showToast(msg: "Current selected Algs is Empty");
+      Provider.of<ScrambleProvider>(context, listen: false).updateList(llnames);
+      return;
+    }
+    Provider.of<ScrambleProvider>(context, listen: false).updateList(llnamesfromDB);
   }
 
   static dynamic llgetmap(String ll) {
@@ -77,9 +108,7 @@ class GenerateScramble {
     const r = ["y", "y'", "y2"];
     String r1 = r[Random().nextInt(r.length)];
     String r2 = r[Random().nextInt(r.length)];
-    while (r1 == r2) {
-      r2 = r[Random().nextInt(r.length)];
-    }
+    r2 = r[Random().nextInt(r.length)];
     String alg1 = rotate(alg, r1);
     String alg2 = rotate(alg, r2);
     int d1 = 0;
