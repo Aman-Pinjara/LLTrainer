@@ -53,7 +53,12 @@ class _GraphPageState extends State<GraphPage> {
             Navigator.of(context).pop();
           },
         ),
-        title: const Text("Graph"),
+        title: Text(
+          "Graph",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
+        ),
         elevation: 1,
       ),
       body: SafeArea(

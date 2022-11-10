@@ -53,7 +53,7 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 5.h),
       child: GestureDetector(
-        onTap: () {
+        onTap: () async{
           setState(() {
             i = (i + 1) % colorarr.length;
           });
@@ -65,7 +65,7 @@ class _ZBLLTypeSelectTileState extends State<ZBLLTypeSelectTile> {
             );
             Provider.of<SelectionStateProvider>(context, listen: false)
                 .addState(newSelection);
-            Selectiondb.instance.updateSelection(newSelection);
+            await Selectiondb.instance.updateSelection(newSelection);
           // Provider.of<SelectionListUpdateProvider>(context, listen: false)
           //     .addSelection(
           //   SelectionModel(

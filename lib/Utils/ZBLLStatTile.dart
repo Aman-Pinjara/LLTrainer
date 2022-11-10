@@ -100,72 +100,92 @@ class ZBLLStatTile extends StatelessWidget {
 
   void dialog(BuildContext context, List<LLViewModel> times) {
     List<LLViewModel> times = llCasesTimes();
+    bool desc = true;
     showDialog(
       context: context,
       builder: (context) {
-        return Dialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.h),
-            child: Column(
-              children: [
-                Material(
-                  elevation: 5,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey),
+        return StatefulBuilder(builder: (context, setState) {
+          desc
+              ? times.sort((a, b) =>
+                  -(a.avg != "--:--" ? double.parse(a.avg) : 0)
+                      .compareTo((b.avg != "--:--" ? double.parse(b.avg) : 0)))
+              : times.sort((a, b) =>
+                  (a.avg != "--:--" ? double.parse(a.avg) : double.infinity)
+                      .compareTo((b.avg != "--:--"
+                          ? double.parse(b.avg)
+                          : double.infinity)));
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r)),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 12.h),
+              child: Column(
+                children: [
+                  Material(
+                    elevation: 5,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              icon: const Icon(
+                                Icons.close,
+                                color: ZBLLTHEME,
+                              )),
+                          Text(
+                            zbType.name,
+                            style: TextStyle(
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Expanded(child: Container()),
+                          IconButton(
+                              onPressed: () {
+                                setState(() => {desc = !desc});
+                              },
+                              icon: desc
+                                  ? const Icon(Icons.arrow_drop_down)
+                                  : const Icon(Icons.arrow_drop_up)),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            icon: const Icon(
-                              Icons.close,
-                              color: ZBLLTHEME,
-                            )),
-                        Text(
-                          zbType.name,
-                          style: TextStyle(
-                            fontSize: 17.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                  ),
+                  Expanded(
+                    child: RawScrollbar(
+                      thumbColor: ZBLLTHEME,
+                      thumbVisibility: true,
+                      radius: const Radius.circular(5),
+                      thickness: 6,
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: times.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ZBLLTypeStatTile(
+                            zb: times[index],
+                            modeColor: ZBLLTHEME,
+                            timeData: zbTypeTimes
+                                .where((element) =>
+                                    element.llcase == times[index].name)
+                                .toList(),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: RawScrollbar(
-                    thumbColor: ZBLLTHEME,
-                    thumbVisibility: true,
-                    radius: const Radius.circular(5),
-                    thickness: 6,
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: times.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ZBLLTypeStatTile(
-                          zb: times[index],
-                          modeColor: ZBLLTHEME,
-                          timeData: zbTypeTimes
-                              .where((element) =>
-                                  element.llcase == times[index].name)
-                              .toList(),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
+          );
+        });
       },
     );
   }
@@ -198,8 +218,6 @@ class ZBLLStatTile extends StatelessWidget {
         if (conout) break;
       }
     }
-    times.sort((a, b) => -(a.avg != "--:--" ? double.parse(a.avg) : 0)
-        .compareTo((b.avg != "--:--" ? double.parse(b.avg) : 0)));
     return times;
   }
 }

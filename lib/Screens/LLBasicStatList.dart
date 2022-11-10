@@ -12,7 +12,7 @@ import 'package:lltrainer/llnames/OLL.dart';
 import 'package:lltrainer/llnames/PLL.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 
-class LLBasicStatList extends StatelessWidget {
+class LLBasicStatList extends StatefulWidget {
   final String ll;
   final Color appbarcolor;
   final List<TimeModel> timeData;
@@ -24,9 +24,16 @@ class LLBasicStatList extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<LLBasicStatList> createState() => _LLBasicStatListState();
+}
+
+class _LLBasicStatListState extends State<LLBasicStatList> {
+  bool desc = true; // 0 is decending, 1 is ascending
+
+  @override
   Widget build(BuildContext context) {
     late List<String> templist;
-    switch (ll) {
+    switch (widget.ll) {
       case "PLL":
         templist = PLLNAMES;
         break;
@@ -40,14 +47,14 @@ class LLBasicStatList extends StatelessWidget {
         templist = ZBLLNAMESTYPE;
         break;
     }
-    final isZB = ll == "ZBLL";
+    final isZB = widget.ll == "ZBLL";
     final List<LLViewModel> dataList = convertToLLviewmodel(templist, isZB);
 
     return Scaffold(
       body: SafeArea(
           child: CustomAppBar(
-        appBarColor: appbarcolor,
-        titleText: "All $ll",
+        appBarColor: widget.appbarcolor,
+        titleText: "All ${widget.ll}",
         leading: IconButton(
           icon: Icon(Icons.arrow_back,
               color: Theme.of(context).colorScheme.primary),
@@ -58,9 +65,27 @@ class LLBasicStatList extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
+              setState(() {
+                desc = !desc;
+              });
+            },
+            icon: desc
+                ? Icon(
+                    Icons.arrow_drop_down,
+                    size: 32,
+                  )
+                : Icon(
+                    Icons.arrow_drop_up,
+                    size: 32,
+                  ),
+          ),
+          IconButton(
+            onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => GraphPage(
-                      modeColor: appbarcolor, graphData: timeData, title: ll)));
+                      modeColor: widget.appbarcolor,
+                      graphData: widget.timeData,
+                      title: widget.ll)));
             },
             icon: Icon(Icons.bar_chart_rounded),
           ),
@@ -71,16 +96,16 @@ class LLBasicStatList extends StatelessWidget {
               return isZB
                   ? ZBLLStatTile(
                       zbType: dataList[index],
-                      zbTypeTimes: timeData
+                      zbTypeTimes: widget.timeData
                           .where((element) => element.llcase
                               .startsWith("${dataList[index].name}-"))
                           .toList(),
                     )
                   : AlgStatTile(
-                      ll: ll,
-                      modeColor: appbarcolor,
+                      ll: widget.ll,
+                      modeColor: widget.appbarcolor,
                       curll: dataList[index],
-                      timeData: timeData
+                      timeData: widget.timeData
                           .where((element) =>
                               element.llcase == dataList[index].name)
                           .toList(),
@@ -97,10 +122,11 @@ class LLBasicStatList extends StatelessWidget {
     List<LLViewModel> times = [];
     if (!isZB) {
       for (var llcase in templist) {
-        final statlist =
-            timeData.where((element) => element.llcase == llcase).toList();
+        final statlist = widget.timeData
+            .where((element) => element.llcase == llcase)
+            .toList();
         final element = LLViewModel(
-          img: "assets/$ll/$llcase.",
+          img: "assets/${widget.ll}/$llcase.",
           name: llcase,
           avg: statlist.isNotEmpty
               ? (statlist.fold<double>(
@@ -123,8 +149,9 @@ class LLBasicStatList extends StatelessWidget {
         int lengthNonZero = 0;
         for (var llcase in ZBLLNAMES) {
           if (llcase.startsWith("$lltype-")) {
-            final statlist =
-                timeData.where((element) => element.llcase == llcase).toList();
+            final statlist = widget.timeData
+                .where((element) => element.llcase == llcase)
+                .toList();
             if (statlist.isNotEmpty) lengthNonZero++;
             avg += statlist.isNotEmpty
                 ? statlist.fold<double>(
@@ -140,7 +167,7 @@ class LLBasicStatList extends StatelessWidget {
           }
         }
         final element = LLViewModel(
-          img: "assets/$ll/$lltype.",
+          img: "assets/${widget.ll}/$lltype.",
           name: lltype,
           avg: avg != 0 ? (avg / lengthNonZero).toStringAsFixed(2) : "--:--",
           best: (best != 0) && (best != double.infinity)
@@ -151,8 +178,14 @@ class LLBasicStatList extends StatelessWidget {
       }
     }
 
-    times.sort((a, b) => -(a.avg != "--:--" ? double.parse(a.avg) : 0)
-        .compareTo((b.avg != "--:--" ? double.parse(b.avg) : 0)));
+    desc
+        ? times.sort((a, b) => -(a.avg != "--:--" ? double.parse(a.avg) : 0)
+            .compareTo((b.avg != "--:--" ? double.parse(b.avg) : 0)))
+        : times.sort((a, b) => (a.avg != "--:--"
+                ? double.parse(a.avg)
+                : double.infinity)
+            .compareTo(
+                (b.avg != "--:--" ? double.parse(b.avg) : double.infinity)));
     return times;
   }
 }

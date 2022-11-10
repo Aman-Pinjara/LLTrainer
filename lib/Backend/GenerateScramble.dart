@@ -57,7 +57,7 @@ class GenerateScramble {
         break;
     }
     if (selection == 0) {
-      Provider.of<ScrambleProvider>(context).updateList(llnames);
+      Provider.of<ScrambleProvider>(context, listen: false).updateList(llnames);
       return;
     }
     final llnamesfromDB =
@@ -65,7 +65,7 @@ class GenerateScramble {
             .map((e) => e.llcase)
             .toList();
     if (llnamesfromDB.isEmpty) {
-      Fluttertoast.showToast(msg: "Current selected Algs is Empty");
+      Fluttertoast.showToast(msg: "Current selected Set is Empty");
       Provider.of<ScrambleProvider>(context, listen: false).updateList(llnames);
       return;
     }

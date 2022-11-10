@@ -3,12 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:lltrainer/AlgLists/DefautlAlgs.dart';
 import 'package:lltrainer/Backend/Selectiondb.dart';
+import 'package:lltrainer/Backend/SettingsBox.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/MyProvider/LastLayerProvier.dart';
 import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
 import 'package:lltrainer/Utils/AlgSelectSaveBtn.dart';
 import 'package:lltrainer/Utils/AlgSelectTile.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
+import 'package:lltrainer/Utils/SelectionOptionDialog.dart';
 import 'package:lltrainer/llnames/PLL.dart';
 import 'package:provider/provider.dart';
 
@@ -95,6 +97,19 @@ class llSelectList extends StatelessWidget {
               }
             },
           ),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                int mode = await SettingsBox().getLLSelectPref(ll);
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return SelectionOptionDialog(ll: ll, mode: mode);
+                    });
+              },
+              icon: const Icon(Icons.ballot_outlined),
+            ),
+          ],
           child: FutureBuilder<List<SelectionModel>>(
             future: getllList(currllNameList, ll),
             builder: (context, snapshot) {

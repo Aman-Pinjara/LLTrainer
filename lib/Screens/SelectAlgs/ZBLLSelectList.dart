@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lltrainer/Backend/Selectiondb.dart';
+import 'package:lltrainer/Backend/SettingsBox.dart';
 import 'package:lltrainer/Models/SelectionModel.dart';
 import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
 import 'package:lltrainer/Utils/AlgSelectSaveBtn.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
+import 'package:lltrainer/Utils/SelectionOptionDialog.dart';
 import 'package:lltrainer/Utils/ZBLLSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
@@ -32,6 +34,20 @@ class ZBLLSelectList extends StatelessWidget {
       child: Scaffold(
         body: SafeArea(
             child: CustomAppBar(
+          actions: [
+            IconButton(
+              onPressed: () async {
+                int mode = await SettingsBox().getLLSelectPref(ll);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SelectionOptionDialog(ll: ll, mode: mode);
+                  },
+                );
+              },
+              icon: const Icon(Icons.ballot_outlined),
+            )
+          ],
           appBarColor: ZBLLTHEME,
           titleText: "Select ZBLL",
           leading: IconButton(
