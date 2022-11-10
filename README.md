@@ -1,16 +1,11 @@
 # lltrainer
 
-A new Flutter project.
+Flutter project related to practicing the last layer algorithms in speed cubing.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This will be an Open Source project which will be released to PlayStore once complete.
 
-A few resources to get you started if this is your first Flutter project:
+I'm the only developer Working on it currently.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A huge Thanks to Sahil Shaikh For helping me with UI/UX for the project.
