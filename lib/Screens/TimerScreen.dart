@@ -32,6 +32,7 @@ class _TimerScreenState extends State<TimerScreen> {
   final _ModeName = ["PLL", "OLL", "COLL", "ZBLL"];
   bool isLock = false;
   bool timeron = false;
+  bool timerStarted = false;
   bool newScramble = true;
   late Stopwatch time;
   int timerColor = 0;
@@ -82,34 +83,40 @@ class _TimerScreenState extends State<TimerScreen> {
       },
       onLongPress: () {
         //change timer color to green
-        setState(() {
-          Provider.of<LockScrollProvider>(context, listen: false)
-              .changeScroll(lock: true);
-          timerColor = 2;
-          timeron = true;
-        });
+        if (!timeron) {
+          setState(() {
+            Provider.of<LockScrollProvider>(context, listen: false)
+                .changeScroll(lock: true);
+            timerColor = 2;
+            timeron = true;
+          });
 
-        time.reset();
+          time.reset();
+        }
       },
       onLongPressEnd: (details) {
         //start timer
-        setState(() {
-          timerColor = 0;
-          time.start();
-        });
-        Timer.periodic(Duration(milliseconds: 100), (t) {
-          if (time.elapsedMilliseconds < 60000 && time.isRunning) {
-            setState(() {});
-          } else {
-            time.stop();
-            t.cancel();
-            setState(() {
-              Provider.of<LockScrollProvider>(context, listen: false)
-                  .changeScroll(lock: isLock);
-              timeron = false;
-            });
-          }
-        });
+        if (!timerStarted) {
+          setState(() {
+            timerColor = 0;
+            time.start();
+          });
+          timerStarted = true;
+          Timer.periodic(Duration(milliseconds: 100), (t) {
+            if (time.elapsedMilliseconds < 60000 && time.isRunning) {
+              setState(() {});
+            } else {
+              time.stop();
+              timerStarted = false;
+              t.cancel();
+              setState(() {
+                Provider.of<LockScrollProvider>(context, listen: false)
+                    .changeScroll(lock: isLock);
+                timeron = false;
+              });
+            }
+          });
+        }
       },
       child: Scaffold(
         body: SafeArea(
