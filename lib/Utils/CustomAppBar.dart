@@ -14,7 +14,8 @@ class CustomAppBar extends StatelessWidget {
       required this.child,
       required this.titleText,
       required this.appBarColor,
-      Key? key, this.actions})
+      Key? key,
+      this.actions})
       : super(key: key);
 
   @override
@@ -24,7 +25,7 @@ class CustomAppBar extends StatelessWidget {
         radius: Radius.circular(5),
         thumbColor: appBarColor,
         thumbVisibility: true,
-        interactive: true,
+        interactive: false,
         child: CustomScrollView(
           physics: BouncingScrollPhysics(),
           slivers: [

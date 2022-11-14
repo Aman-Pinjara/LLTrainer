@@ -8,6 +8,9 @@ import 'package:lltrainer/Models/TimeModel.dart';
 import 'package:lltrainer/Screens/LLBasicStatList.dart';
 import 'package:lltrainer/my_colors.dart';
 
+import '../AlgLists/DefautlAlgs.dart';
+import '../Backend/Selectiondb.dart';
+
 class StatsDetail extends StatefulWidget {
   final String ll;
   final Color llMode;
@@ -213,11 +216,42 @@ class _StatsDetailState extends State<StatsDetail> {
                               ),
                             ]),
                             Expanded(
-                              child: Text(
-                                "R U R' U' R' F R2 U R' U' R U R' F'",
-                                textAlign: TextAlign.center,
+                                child: FutureBuilder<String?>(
+                                    future: Selectiondb.instance
+                                        .getSelectionAlg(widget.ll,
+                                            time.llcase),
+                                    builder: (context, snapshot) {
+                                      late final String defalg;
+                                      switch (widget.ll) {
+                                        case "PLL":
+                                          defalg =
+                                              DefaultAlgs.pll[time.llcase]!;
+                                          break;
+                                        case "OLL":
+                                          defalg =
+                                              DefaultAlgs.oll[time.llcase]!;
+                                          break;
+                                        case "COLL":
+                                          defalg = DefaultAlgs
+                                              .coll[time.llcase]!;
+                                          break;
+                                        case "ZBLL":
+                                          defalg = DefaultAlgs
+                                              .zbll[time.llcase]!;
+                                          break;
+                                      }
+                                      if (!snapshot.hasData) {
+                                        return Text(
+                                          snapshot.data ?? defalg,
+                                          textAlign: TextAlign.center,
+                                        );
+                                      }
+                                      if (snapshot.hasError) {
+                                        return Text("Some error occured");
+                                      }
+                                      return CircularProgressIndicator();
+                                    }),
                               ),
-                            ),
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
