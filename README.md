@@ -1,6 +1,6 @@
 # lltrainer
 
-Flutter project related to practicing the last layer algorithms in speed cubing.
+Last Layer Trainer App to practicing the last layer algorithms which is the Last step in Solving rubiks Cube.
 
 ## About Project
 
