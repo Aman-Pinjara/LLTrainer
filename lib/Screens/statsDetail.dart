@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lltrainer/Backend/Timedb.dart';
 import 'package:lltrainer/Models/TimeModel.dart';
 import 'package:lltrainer/Screens/LLBasicStatList.dart';
+import 'package:lltrainer/Utils/CustomCircularLoader.dart';
 import 'package:lltrainer/my_colors.dart';
 
 import '../AlgLists/DefautlAlgs.dart';
@@ -111,7 +112,12 @@ class _StatsDetailState extends State<StatsDetail> {
                           child: Text("Error Occured"),
                         );
                       }
-                      return Center(child: CircularProgressIndicator());
+                      return Center(
+                        child: CustomCircularLoader(
+                          radius: 20,
+                          dotRadius: 10,
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -216,42 +222,37 @@ class _StatsDetailState extends State<StatsDetail> {
                               ),
                             ]),
                             Expanded(
-                                child: FutureBuilder<String?>(
-                                    future: Selectiondb.instance
-                                        .getSelectionAlg(widget.ll,
-                                            time.llcase),
-                                    builder: (context, snapshot) {
-                                      late final String defalg;
-                                      switch (widget.ll) {
-                                        case "PLL":
-                                          defalg =
-                                              DefaultAlgs.pll[time.llcase]!;
-                                          break;
-                                        case "OLL":
-                                          defalg =
-                                              DefaultAlgs.oll[time.llcase]!;
-                                          break;
-                                        case "COLL":
-                                          defalg = DefaultAlgs
-                                              .coll[time.llcase]!;
-                                          break;
-                                        case "ZBLL":
-                                          defalg = DefaultAlgs
-                                              .zbll[time.llcase]!;
-                                          break;
-                                      }
-                                      if (!snapshot.hasData) {
-                                        return Text(
-                                          snapshot.data ?? defalg,
-                                          textAlign: TextAlign.center,
-                                        );
-                                      }
-                                      if (snapshot.hasError) {
-                                        return Text("Some error occured");
-                                      }
-                                      return CircularProgressIndicator();
-                                    }),
-                              ),
+                              child: FutureBuilder<String?>(
+                                  future: Selectiondb.instance
+                                      .getSelectionAlg(widget.ll, time.llcase),
+                                  builder: (context, snapshot) {
+                                    late final String defalg;
+                                    switch (widget.ll) {
+                                      case "PLL":
+                                        defalg = DefaultAlgs.pll[time.llcase]!;
+                                        break;
+                                      case "OLL":
+                                        defalg = DefaultAlgs.oll[time.llcase]!;
+                                        break;
+                                      case "COLL":
+                                        defalg = DefaultAlgs.coll[time.llcase]!;
+                                        break;
+                                      case "ZBLL":
+                                        defalg = DefaultAlgs.zbll[time.llcase]!;
+                                        break;
+                                    }
+                                    if (!snapshot.hasData) {
+                                      return Text(
+                                        snapshot.data ?? defalg,
+                                        textAlign: TextAlign.center,
+                                      );
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Text("Some error occured");
+                                    }
+                                    return CircularProgressIndicator();
+                                  }),
+                            ),
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [

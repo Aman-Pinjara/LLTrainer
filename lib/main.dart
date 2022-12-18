@@ -34,8 +34,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool dontScroll = Provider.of<LockScrollProvider>(context).dontScroll;
-    final PageController _controller = PageController(initialPage: 1);
-    final PageController timeviewcontroller = PageController();
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: (context, child) => MaterialApp(
@@ -45,31 +43,85 @@ class MyApp extends StatelessWidget {
         darkTheme: MyTheme.darkTheme,
         home: child,
       ),
-      child: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (overscroll) {
-          overscroll.disallowIndicator();
-          return true;
-        },
-        child: PageView(
-          scrollDirection: Axis.vertical,
-          physics: dontScroll ? NeverScrollableScrollPhysics() : null,
-          controller: timeviewcontroller,
-          children: [
-            PageView(
-              physics: dontScroll ? NeverScrollableScrollPhysics() : null,
-              controller: _controller,
-              children: [
-                Selection(
-                  controller: _controller,
-                ),
-                TimerScreen(),
-              ],
-            ),
-            TimesViewPage(
-              controller: timeviewcontroller,
-            )
-          ],
-        ),
+      child: HomeLayout(
+        dontScroll: dontScroll,
+      ),
+    );
+  }
+}
+
+class HomeLayout extends StatefulWidget {
+  const HomeLayout({
+    Key? key,
+    required this.dontScroll,
+  }) : super(key: key);
+
+  final bool dontScroll;
+
+  @override
+  State<HomeLayout> createState() => _HomeLayoutState();
+}
+
+class _HomeLayoutState extends State<HomeLayout> {
+  late PageController timeviewcontroller;
+  late PageController timerselectcontroller;
+  bool lockVertical = false;
+  late List<Widget> horizontal;
+
+  @override
+  void dispose() {
+    timeviewcontroller.dispose();
+    timerselectcontroller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    timerselectcontroller = PageController(initialPage: 1);
+    timeviewcontroller = PageController();
+    horizontal = [
+      Selection(
+        controller: timerselectcontroller,
+      ),
+      TimerScreen()
+    ];
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return NotificationListener<OverscrollIndicatorNotification>(
+      onNotification: (overscroll) {
+        overscroll.disallowIndicator();
+        return true;
+      },
+      child: PageView(
+        scrollDirection: Axis.vertical,
+        physics: (widget.dontScroll || lockVertical)
+            ? NeverScrollableScrollPhysics()
+            : null,
+        controller: timeviewcontroller,
+        children: [
+          PageView(
+            onPageChanged: (value) {
+              if (value == 1) {
+                setState(() {
+                  lockVertical = false;
+                });
+              } else {
+                setState(() {
+                  lockVertical = true;
+                });
+              }
+            },
+            physics: widget.dontScroll ? NeverScrollableScrollPhysics() : null,
+            controller: timerselectcontroller,
+            children: horizontal,
+          ),
+          TimesViewPage(
+            controller: timeviewcontroller,
+          )
+        ],
       ),
     );
   }

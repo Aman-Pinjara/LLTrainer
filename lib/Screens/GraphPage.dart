@@ -28,11 +28,11 @@ class _GraphPageState extends State<GraphPage> {
     final Color grey =
         Theme.of(context).colorScheme.onSecondary.withOpacity(0.6);
     final TextStyle unselected = TextStyle(
-      color: Theme.of(context).colorScheme.onSurface,
+      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
       fontWeight: FontWeight.w500,
     );
     final TextStyle selected = TextStyle(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).colorScheme.primary,
       fontWeight: FontWeight.bold,
     );
     List<double> times = [];
@@ -93,8 +93,10 @@ class _GraphPageState extends State<GraphPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<int>(
+                                dropdownColor: widget.modeColor,
                                 style: TextStyle(
                                   fontSize: 12.sp,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                                 isDense: true,
                                 elevation: 3,
@@ -205,8 +207,8 @@ class _GraphPageState extends State<GraphPage> {
                                       barRods: [
                                         BarChartRodData(
                                           toY: e,
-                                          color:
-                                              widget.modeColor.withOpacity(0.5),
+                                          color: widget.modeColor
+                                              .withOpacity(0.75),
                                           width: 20.w,
                                           borderRadius: BorderRadius.vertical(
                                             top: Radius.circular(12.r),

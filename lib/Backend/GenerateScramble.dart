@@ -24,9 +24,10 @@ class GenerateScramble {
     if (Provider.of<ScrambleProvider>(context, listen: false)
         .caselist
         .isEmpty) {
-      await getCasesFromDb(ll,context);
+      await getCasesFromDb(ll, context);
     }
-    List<String> a = Provider.of<ScrambleProvider>(context, listen: false).caselist;
+    List<String> a =
+        Provider.of<ScrambleProvider>(context, listen: false).caselist;
     String llcase = a[Random().nextInt(a.length)];
     String alg = getRandomAlg(llcase, Algmap, ll);
     // print("case $llcase");
@@ -64,12 +65,14 @@ class GenerateScramble {
         (await Selectiondb.instance.filterSelections(ll, selection))
             .map((e) => e.llcase)
             .toList();
+    // print(llnamesfromDB);
     if (llnamesfromDB.isEmpty) {
       Fluttertoast.showToast(msg: "Current selected Set is Empty");
       Provider.of<ScrambleProvider>(context, listen: false).updateList(llnames);
       return;
     }
-    Provider.of<ScrambleProvider>(context, listen: false).updateList(llnamesfromDB);
+    Provider.of<ScrambleProvider>(context, listen: false)
+        .updateList(llnamesfromDB);
   }
 
   static dynamic llgetmap(String ll) {
@@ -92,6 +95,7 @@ class GenerateScramble {
     late String Alg;
     if (ll == "ZBLL") {
       final temp = llcase.split('-');
+      // print(temp);
       int totalAlgs = Algmap[temp[0]][temp[1]][temp[2]].length;
       Alg = Algmap[temp[0]][temp[1]][temp[2]][Random().nextInt(totalAlgs)];
     } else if (ll == "OLL") {

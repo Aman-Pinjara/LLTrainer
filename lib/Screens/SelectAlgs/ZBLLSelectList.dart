@@ -3,13 +3,14 @@ import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Backend/SettingsBox.dart';
 import 'package:lltrainer/Models/SelectionModel.dart';
 import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
-import 'package:lltrainer/Utils/AlgSelectSaveBtn.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
 import 'package:lltrainer/Utils/SelectionOptionDialog.dart';
 import 'package:lltrainer/Utils/ZBLLSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
+
+import '../../Utils/CustomCircularLoader.dart';
 
 class ZBLLSelectList extends StatelessWidget {
   final PageController controller;
@@ -92,8 +93,14 @@ class ZBLLSelectList extends StatelessWidget {
               return SliverList(
                 delegate: SliverChildListDelegate(
                   [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 4,
+                    ),
                     const Center(
-                      child: Text("Loading"),
+                      child: CustomCircularLoader(
+                        radius: 20,
+                        dotRadius: 8,
+                      ),
                     ),
                   ],
                 ),

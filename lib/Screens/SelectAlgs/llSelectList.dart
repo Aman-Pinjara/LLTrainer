@@ -10,6 +10,7 @@ import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
 import 'package:lltrainer/Utils/AlgSelectSaveBtn.dart';
 import 'package:lltrainer/Utils/AlgSelectTile.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
+import 'package:lltrainer/Utils/CustomCircularLoader.dart';
 import 'package:lltrainer/Utils/SelectionOptionDialog.dart';
 import 'package:lltrainer/llnames/PLL.dart';
 import 'package:provider/provider.dart';
@@ -128,12 +129,31 @@ class llSelectList extends StatelessWidget {
               }
               if (snapshot.hasError) {
                 return SliverList(
-                    delegate: SliverChildListDelegate(
-                        [const Center(child: Text("There was some error"))]));
+                  delegate: SliverChildListDelegate(
+                    [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 3,
+                      ),
+                      const Center(child: Text("There was some error")),
+                    ],
+                  ),
+                );
               }
               return SliverList(
-                  delegate: SliverChildListDelegate(
-                      [const Center(child: Text("Loading"))]));
+                delegate: SliverChildListDelegate(
+                  [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 4,
+                    ),
+                    Center(
+                      child: CustomCircularLoader(
+                        radius: 20,
+                        dotRadius: 8,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
           ),
         )),

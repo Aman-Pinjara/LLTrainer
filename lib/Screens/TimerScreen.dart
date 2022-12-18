@@ -12,6 +12,7 @@ import 'package:lltrainer/Backend/Timedb.dart';
 import 'package:lltrainer/Models/ScrambleData.dart';
 import 'package:lltrainer/Models/TimeModel.dart';
 import 'package:lltrainer/MyProvider/ScrambleProvider.dart';
+import 'package:lltrainer/Utils/CustomHorizontalLoader.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -465,22 +466,27 @@ class _TimerScreenState extends State<TimerScreen> {
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
-                      return Center(child: CircularProgressIndicator());
+                      return Center(
+                        child: CustomHorizontalLoader(),
+                      );
                     default:
                       if (snapshot.hasData) {
                         return Text(
                           textAlign: TextAlign.center,
                           snapshot.data!,
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 17.5.sp,
-                              fontWeight: FontWeight.w500),
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 17.5.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
                         );
                       }
                       if (snapshot.hasError) {
                         return Text("There is some error");
                       }
-                      return Center(child: Text("No data"));
+                      return Center(
+                        child: CustomHorizontalLoader(),
+                      );
                   }
                 }),
           ),
