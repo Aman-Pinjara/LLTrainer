@@ -4,10 +4,10 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lltrainer/AlgLists/OLLAlgs.dart';
-import 'package:lltrainer/AlgLists/PLLAlgs.dart';
-import 'package:lltrainer/AlgLists/COLLAlgs.dart';
-import 'package:lltrainer/AlgLists/ZBLLAlgs.dart';
+import 'package:lltrainer/LLScrambleData/OLLAlgs.dart';
+import 'package:lltrainer/LLScrambleData/PLLAlgs.dart';
+import 'package:lltrainer/LLScrambleData/COLLAlgs.dart';
+import 'package:lltrainer/LLScrambleData/ZBLLAlgs.dart';
 import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/Backend/SettingsBox.dart';
 import 'package:lltrainer/Models/ScrambleData.dart';

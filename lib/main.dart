@@ -5,10 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lltrainer/MyProvider/ScrambleProvider.dart';
 import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
 import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
-import 'package:lltrainer/Screens/SelectAlgs/Selection.dart';
-import 'package:lltrainer/Screens/TimesViewPage.dart';
+import 'package:lltrainer/Screens/selectalg-screen/Selection.dart';
+import 'package:lltrainer/Screens/timeview-screen/TimesViewPage.dart';
 import 'package:lltrainer/custom_theme.dart';
-import 'package:lltrainer/Screens/TimerScreen.dart';
+import 'package:lltrainer/Screens/timer-screen/TimerScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
