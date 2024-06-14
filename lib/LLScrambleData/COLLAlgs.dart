@@ -3,7 +3,7 @@
 const COLLAlgs = {
   "AS1" : [
     "R U2 R2 U' R2 U' R2 U2 R U R U R' U R U2 R'",
-    "R' U' R U' R' U2' R",
+    "R' U' R U' R' U2 R",
     "L U2 L' U' L U' L'",
     "R U2 R' U' R U' R'",
     "R' U' R U' R' U2 R",
@@ -58,7 +58,7 @@ const COLLAlgs = {
     "R U R2 D' R U2 R' D R U' R U2 R'",
     "R' F' R U2 R U2 R' F U' R U' R'",
     "R U R' U R U L' U R' U' L",
-    "R U R2' F R F' L F' L' U L F L'",
+    "R U R2 F R F' L F' L' U L F L'",
   ],
   "H4": [
     "R' U' R' F R F' R' F R F' R' F R F' U R",
@@ -70,7 +70,7 @@ const COLLAlgs = {
     "R U2 R' U2 R' U' R U R U' R' U2 R' U2 R",
     "R U2 R' U' R U R' U' R U R' U' R U' R'",
     "R' U' R U' R' U2 R U' R U R' U R U2 R'",
-    "R U R' U R U' R' U R U' R' U R U2' R'",
+    "R U R' U R U' R' U R U' R' U R U2 R'",
   ],
   "L2": [
     "L' U2 L' D' L U2 L' D L2",
@@ -106,14 +106,14 @@ const COLLAlgs = {
   ],
   "P1": [
     "R U2 R2 U' R2 U' R2 U2 R",
-    "L' U2 L2 U L2' U L2 U2 L'",
+    "L' U2 L2 U L2 U L2 U2 L'",
     "B U L U' L' B' F R U R' U' F'",
   ],
   "P2": [
     "R' U2 R U R' U' R U2 L U' R' U R L'",
     "R U2 R' U' R U' R2 U L U' R U L'",
     "L' U R U' L U R2 U' R U' R' U2 R",
-    "R' F2 R U2' R U2' R' F2 U' R U' R'",
+    "R' F2 R U2 R U2 R' F2 U' R U' R'",
     "F U R U' R' U R U' R2 F' R U R U' R'",
   ],
   "P3": [
@@ -137,9 +137,9 @@ const COLLAlgs = {
   ],
   "P6": [
     "R U' R' U2 L' U R U' L R' U2 R U R'",
-    "R U D' R U R' D R2 U' R' U' R2' U2' R",
-    "R' U' D R' U' R D' R2' U R U R2 U2' R'",
-    "F R U' R' U R U R' U R U2 R' U R U R' U R U' R' F",
+    "R U D' R U R' D R2 U' R' U' R2 U2 R",
+    "R' U' D R' U' R D' R2 U R U R2 U2 R'",
+    "F R U' R' U R U R' U R U2 R' U R U R' U R U' R' F'",
     "F R2 U' R U' R U' R' U2 R' U R2 F'",
     "R U2 R' U' F' R U2 R' U' R U' R' F R U' R'",
   ],
@@ -147,13 +147,13 @@ const COLLAlgs = {
     "L U L' U L U2 L'",
     "L' U2 L U L' U L ",
     "R' U2 R U R' U R",
-    "R U R' U R U2' R'",
+    "R U R' U R U2 R'",
   ],
   "S2": [
     "F R' U' R2 U' R2 U2 R2 U' R' F'",
     "R' U2 R U2 L U' R' U L' R",
     "L' U2 L U2 R U' L' U L R'",
-    "R' U' R U R2' F' R U R U' R' F U R",
+    "R' U' R U R2 F' R U R U' R' F U R",
     "R U R2 F' R U2 R U2 R' F R U' R'",
     "R U R' U R2 D R' U2 R D' R2",
   ],
@@ -180,7 +180,7 @@ const COLLAlgs = {
     "F' R U2 R' U2 R' F2 R U R U' R' F'",
     "R' U2 L U' R U L' U R' U R",
     "F R U' R2 U2 R U R' U R2 U R' F'",
-    "R U R' U L' U R U' L U2' R'",
+    "R U R' U L' U R U' L U2 R'",
   ],
   "T1":[
     "R U2 R' U' R U' R' U R U R' U R U2 R'",
@@ -194,7 +194,7 @@ const COLLAlgs = {
     "R' U R U2 L' R' U R U' L",
     "R U2 R U2 F2 R F2 L' U2 L U2 R2",
     "R U2 R' U' R' F R2 U' R' U' R U R' F' R U' R'",
-    "R' U L' U' L R U2' L' U' L",
+    "R' U L' U' L R U2 L' U' L",
     "R' U R U2 L' R' U R U' L",
     "R' U' R' U' R U R' F' R U R' U' R' F R'",
     "R U' R' U2 L R U' R' U L'",
@@ -208,7 +208,6 @@ const COLLAlgs = {
     "R' F' U' F U R F R' F' R U R U' R'",
     "F U' L' U R2 U' L U R2 F'",
     "F' R' F U2 F' R F R' U2 R",
-    "R2 F R F' R U' R' U' r' F R F'",
     "L' U2 R U2 R' U2 L U2 R U2 R'",
     "R F R' U R U2 R' U R U F' R'",
   ],
@@ -223,8 +222,7 @@ const COLLAlgs = {
     "L' U2 L U' R' U L' U' R2 U' L U R'",
     "R2 U R' D' R U R' D R' U' R2 U' R2",
     "R' U' R U' R' U R U R' F' R U R' U' R' F R2",
-    "R U R' U' R2 D R' U2 R D' R2' U R U' R'",
-    "R' U R2 D L' F2 L D' R2' U' R",
+    "R U R' U' R2 D R' U2 R D' R2 U R U' R'",
   ],
   "U1":[
     "R U R' U' R U R' U' R U R' U' R2 U R2 U R2 U2 R2",
@@ -247,7 +245,7 @@ const COLLAlgs = {
     "R U R' U R U' R' U' R' F R U R U' R' F'",
     "R' U2 R U R2 F' R U R U' R' F R",
     "R U R' U R U' R' U' R' F R U R U' R' F'",
-    "R2 D R' U2 R D' R' U2' R'",
+    "R2 D R' U2 R D' R' U2 R'",
     "R' U' R U' R' U2 R2 U' L' U R' U' L",
   ],
   "U4":[
@@ -268,7 +266,7 @@ const COLLAlgs = {
     "R U' R' U' R U2 R2 D' R U R' D R",
     "R2 D' R U R' D R U R U' R' U' R",
     "F U' R' U R U F' R' U2 R",
-    "R' D R2 U' R' U' R U2 R2' D' R",
+    "R' D R2 U' R' U' R U2 R2 D' R",
     "R' U2 R U2 R' F' R U R' U' R' F R2",
     "R U' R' U' R U R D R' U R D' R2",
   ]
