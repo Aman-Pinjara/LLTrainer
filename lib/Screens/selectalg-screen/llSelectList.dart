@@ -7,7 +7,6 @@ import 'package:lltrainer/Backend/SettingsBox.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/MyProvider/LastLayerProvier.dart';
 import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
-import 'package:lltrainer/Utils/AlgSelectTile.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
 import 'package:lltrainer/Utils/CustomCircularLoader.dart';
 import 'package:lltrainer/Utils/SelectionOptionDialog.dart';
@@ -18,6 +17,7 @@ import '../../Models/SelectionModel.dart';
 import '../../llnames/COLL.dart';
 import '../../llnames/OLL.dart';
 import '../../my_colors.dart';
+import 'tiles/algselecttile.dart';
 
 class llSelectList extends StatelessWidget {
   final String ll;

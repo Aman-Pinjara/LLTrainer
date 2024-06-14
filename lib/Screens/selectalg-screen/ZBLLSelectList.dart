@@ -5,12 +5,12 @@ import 'package:lltrainer/Models/SelectionModel.dart';
 import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
 import 'package:lltrainer/Utils/CustomAppBar.dart';
 import 'package:lltrainer/Utils/SelectionOptionDialog.dart';
-import 'package:lltrainer/Utils/ZBLLSelectTile.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';
 
 import '../../Utils/CustomCircularLoader.dart';
+import 'tiles/zbllselecttile.dart';
 
 class ZBLLSelectList extends StatelessWidget {
   final PageController controller;
