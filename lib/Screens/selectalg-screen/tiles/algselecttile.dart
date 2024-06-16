@@ -2,11 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lltrainer/LLScrambleData/DefautlAlgs.dart';
 import 'package:lltrainer/Backend/Selectiondb.dart';
 import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
 
 import '../../../Models/SelectionModel.dart';
 

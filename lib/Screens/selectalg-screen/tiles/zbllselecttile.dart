@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lltrainer/Models/LLSelectViewModel.dart';
 import 'package:lltrainer/Models/SelectionModel.dart';
-import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
 import 'package:lltrainer/llnames/ZBLL.dart';
 import 'package:lltrainer/my_colors.dart';
 import 'package:provider/provider.dart';

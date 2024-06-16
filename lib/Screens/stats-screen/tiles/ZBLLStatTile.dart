@@ -5,7 +5,6 @@ import 'package:lltrainer/Models/LLViewModel.dart';
 import 'package:lltrainer/Models/TimeModel.dart';
 import 'package:lltrainer/Screens/stats-screen/tiles/ZBLLTypeStatTile.dart';
 
-import '../../../Backend/Timedb.dart';
 import '../../../llnames/ZBLL.dart';
 import '../../../my_colors.dart';
 
@@ -150,7 +149,7 @@ class ZBLLStatTile extends StatelessWidget {
                           Expanded(child: Container()),
                           IconButton(
                               onPressed: () {
-                                setState(() => {desc = !desc});
+                                setState(() => desc = !desc);
                               },
                               icon: desc
                                   ? const Icon(Icons.arrow_drop_down)
