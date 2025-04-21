@@ -63,6 +63,24 @@ class _SelectionOptionDialogState extends State<SelectionOptionDialog> {
           },
         ),
         RadioListTile<int>(
+          activeColor: Theme.of(context).colorScheme.error,
+          title: Text(
+            "All Except not learned",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+          value: 3,
+          groupValue: mode,
+          onChanged: (value) {
+            setState(() {
+              mode = value!;
+            });
+            SettingsBox().setLLSelectPref(widget.ll, value!);
+          },
+        ),
+        RadioListTile<int>(
           activeColor: Theme.of(context).colorScheme.onSecondary,
           title: Text(
             "All",

@@ -37,7 +37,6 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: (context, child) => MaterialApp(
-        title: 'Flutter Demo',
         themeMode: ThemeMode.system,
         theme: MyTheme.lightTheme,
         darkTheme: MyTheme.darkTheme,

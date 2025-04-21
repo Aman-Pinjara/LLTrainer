@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -120,6 +121,12 @@ class _TimerScreenState extends State<TimerScreen> {
         }
       },
       child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 0,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: _Mode[curMode],
+          ),
+        ),
         body: SafeArea(
           child: Stack(children: [
             Column(
@@ -367,13 +374,20 @@ class _TimerScreenState extends State<TimerScreen> {
                                               .zbll[scramble.llcase]!;
                                           break;
                                       }
+                                      if (snapshot.hasData) {
+                                        return Text(
+                                          snapshot.data!,
+                                          textAlign: TextAlign.center,
+                                        );
+                                      }
                                       if (!snapshot.hasData) {
                                         return Text(
-                                          snapshot.data ?? defalg,
+                                          defalg,
                                           textAlign: TextAlign.center,
                                         );
                                       }
                                       if (snapshot.hasError) {
+                                        print(snapshot.error);
                                         return Text("Some error occured");
                                       }
                                       return CircularProgressIndicator();

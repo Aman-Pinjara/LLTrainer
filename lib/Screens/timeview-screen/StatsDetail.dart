@@ -39,6 +39,22 @@ class _StatsDetailState extends State<StatsDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        leading: IconButton(
+            alignment: Alignment.centerLeft,
+            onPressed: () {
+              if (widget.controller.hasClients) {
+                widget.controller.animateToPage(0,
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeInOut);
+              }
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: widget.llMode,
+            )),
+      ),
       body: WillPopScope(
         onWillPop: () async {
           if (widget.controller.hasClients) {
@@ -55,28 +71,28 @@ class _StatsDetailState extends State<StatsDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Material(
-              elevation: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: IconButton(
-                      alignment: Alignment.centerLeft,
-                      onPressed: () {
-                        if (widget.controller.hasClients) {
-                          widget.controller.animateToPage(0,
-                              duration: Duration(milliseconds: 400),
-                              curve: Curves.easeInOut);
-                        }
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: widget.llMode,
-                      )),
-                ),
-              ),
-            ),
+            // Material(
+            //   elevation: 1,
+            //   child: Padding(
+            //     padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            //     child: SizedBox(
+            //       width: double.infinity,
+            //       child: IconButton(
+            //           alignment: Alignment.centerLeft,
+            //           onPressed: () {
+            //             if (widget.controller.hasClients) {
+            //               widget.controller.animateToPage(0,
+            //                   duration: Duration(milliseconds: 400),
+            //                   curve: Curves.easeInOut);
+            //             }
+            //           },
+            //           icon: Icon(
+            //             Icons.arrow_back,
+            //             color: widget.llMode,
+            //           )),
+            //     ),
+            //   ),
+            // ),
             Expanded(
               child: RawScrollbar(
                 interactive: true,

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, must_be_immutable, camel_case_types
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lltrainer/Models/TimeModel.dart';
 import 'package:lltrainer/Screens/stats-screen/GraphPage.dart';
 import 'package:lltrainer/Screens/stats-screen/tiles/ZBLLStatTile.dart';
@@ -51,13 +52,14 @@ class _LLBasicStatListState extends State<LLBasicStatList> {
     final List<LLViewModel> dataList = convertToLLviewmodel(templist, isZB);
 
     return Scaffold(
+      appBar: AppBar(toolbarHeight: 0, systemOverlayStyle: SystemUiOverlayStyle(statusBarColor: widget.appbarcolor),),
       body: SafeArea(
           child: CustomAppBar(
         appBarColor: widget.appbarcolor,
         titleText: "All ${widget.ll}",
         leading: IconButton(
           icon: Icon(Icons.arrow_back,
-              color: Theme.of(context).colorScheme.primary),
+              color: Theme.of(context).colorScheme.onSecondary),
           onPressed: () {
             Navigator.of(context).pop();
           },
