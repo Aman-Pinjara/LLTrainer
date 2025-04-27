@@ -155,7 +155,7 @@ class _AlgSelectTileState extends State<AlgSelectTile> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop(_controller.text);
+                      Navigator.of(context).pop("");
                       final newSelection = SelectionModel(
                         llcase: widget.curll.llcase,
                         lltype: widget.curll.lltype,

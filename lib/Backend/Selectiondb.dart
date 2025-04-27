@@ -91,11 +91,22 @@ class Selectiondb {
 
   Future<List<SelectionModel>> filterSelections(String lltype, int sel) async {
     final db = await instance.database;
-    final selection = await db.query(
-      SELECTIONTABLENAME,
-      where: "${SelectionModelDBFields.lltype} = ? and ${SelectionModelDBFields.selectionType} = ?",
-      whereArgs: [lltype,sel.toString()],
-    );
+    final List<Map<String, Object?>> selection;
+    if (sel != 3) {
+      selection = await db.query(
+        SELECTIONTABLENAME,
+        where:
+            "${SelectionModelDBFields.lltype} = ? and ${SelectionModelDBFields.selectionType} = ?",
+        whereArgs: [lltype, sel.toString()],
+      );
+    } else {
+      selection = await db.query(
+        SELECTIONTABLENAME,
+        where:
+            "${SelectionModelDBFields.lltype} = ? and ${SelectionModelDBFields.selectionType} != ?",
+        whereArgs: [lltype, sel.toString()],
+      );
+    }
     return selection.map((e) => SelectionModel.fromJson(e)).toList();
   }
 

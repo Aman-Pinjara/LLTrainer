@@ -86,7 +86,7 @@ class llSelectList extends StatelessWidget {
           titleText: "Select $ll",
           leading: IconButton(
             icon: Icon(Icons.arrow_back,
-                color: Theme.of(context).colorScheme.primary),
+                color: Theme.of(context).scaffoldBackgroundColor),
             onPressed: () {
               if (controller.hasClients) {
                 controller.animateToPage(

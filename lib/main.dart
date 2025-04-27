@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors, no_leading_underscores_for_local_identifiers, prefer_const_literals_to_create_immutables
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lltrainer/MyProvider/CurrentScrambleProvider.dart';
 import 'package:lltrainer/MyProvider/ScrambleProvider.dart';
 import 'package:lltrainer/MyProvider/SelectionListUpdateProvider.dart';
 import 'package:lltrainer/MyProvider/SelectionStateProvider.dart';
+import 'package:lltrainer/MyProvider/TimerScreenStateProvider.dart';
 import 'package:lltrainer/Screens/selectalg-screen/Selection.dart';
 import 'package:lltrainer/Screens/timeview-screen/TimesViewPage.dart';
 import 'package:lltrainer/custom_theme.dart';
@@ -25,6 +28,8 @@ void main() async {
     ChangeNotifierProvider(create: (_) => SelectionListUpdateProvider()),
     ChangeNotifierProvider(create: (_) => SelectionStateProvider()),
     ChangeNotifierProvider(create: (_) => ScrambleProvider()),
+    ChangeNotifierProvider(create: (_) => CurrentScrambleProvider()),
+    ChangeNotifierProvider(create: (_) => TimerScreenStateProvider()),
   ], child: const MyApp()));
 }
 
@@ -37,7 +42,6 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(360, 640),
       builder: (context, child) => MaterialApp(
-        title: 'Flutter Demo',
         themeMode: ThemeMode.system,
         theme: MyTheme.lightTheme,
         darkTheme: MyTheme.darkTheme,
@@ -78,12 +82,14 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   void initState() {
     timerselectcontroller = PageController(initialPage: 1);
-    timeviewcontroller = PageController();
     horizontal = [
       Selection(
         controller: timerselectcontroller,
       ),
-      TimerScreen()
+      TimerScreen(controller: timerselectcontroller),
+      TimesViewPage(
+        controller: timerselectcontroller,
+      )
     ];
     super.initState();
   }
@@ -96,32 +102,11 @@ class _HomeLayoutState extends State<HomeLayout> {
         return true;
       },
       child: PageView(
-        scrollDirection: Axis.vertical,
-        physics: (widget.dontScroll || lockVertical)
-            ? NeverScrollableScrollPhysics()
-            : null,
-        controller: timeviewcontroller,
-        children: [
-          PageView(
-            onPageChanged: (value) {
-              if (value == 1) {
-                setState(() {
-                  lockVertical = false;
-                });
-              } else {
-                setState(() {
-                  lockVertical = true;
-                });
-              }
-            },
-            physics: widget.dontScroll ? NeverScrollableScrollPhysics() : null,
-            controller: timerselectcontroller,
-            children: horizontal,
-          ),
-          TimesViewPage(
-            controller: timeviewcontroller,
-          )
-        ],
+        physics: widget.dontScroll ? NeverScrollableScrollPhysics() : ClampingScrollPhysics(),
+        controller: timerselectcontroller,
+        dragStartBehavior: DragStartBehavior.down,
+        // scrollBehavior: behavior,
+        children: horizontal,
       ),
     );
   }

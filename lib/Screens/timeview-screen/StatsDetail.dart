@@ -5,9 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lltrainer/Backend/Timedb.dart';
 import 'package:lltrainer/Models/TimeModel.dart';
+import 'package:lltrainer/MyProvider/LastLayerProvier.dart';
 import 'package:lltrainer/Screens/stats-screen/LLBasicStatList.dart';
 import 'package:lltrainer/Utils/CustomCircularLoader.dart';
 import 'package:lltrainer/my_colors.dart';
+import 'package:provider/provider.dart';
 
 import '../../LLScrambleData/DefautlAlgs.dart';
 import '../../Backend/Selectiondb.dart';
@@ -35,15 +37,40 @@ class _StatsDetailState extends State<StatsDetail> {
   }
 
   late List<TimeModel> times;
+  final _Mode = [PLLTHEME, OLLTHEME, COLLTHEME, ZBLLTHEME];
 
   @override
   Widget build(BuildContext context) {
+    int curcolorindex = Provider.of<LastLayerProvider>(context).curMode;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: _Mode[curcolorindex],
+        title: Text(
+          " ${widget.ll} Stats",
+          style: TextStyle(
+            color: Theme.of(context).scaffoldBackgroundColor,
+          ),
+        ),
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+            alignment: Alignment.centerLeft,
+            onPressed: () {
+              if (widget.controller.hasClients) {
+                widget.controller.animateToPage(1,
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeInOut);
+              }
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(context).scaffoldBackgroundColor,
+            )),
+      ),
       body: WillPopScope(
         onWillPop: () async {
           if (widget.controller.hasClients) {
             widget.controller.animateToPage(
-              0,
+              1,
               duration: const Duration(milliseconds: 400),
               curve: Curves.easeInOut,
             );
@@ -55,34 +82,12 @@ class _StatsDetailState extends State<StatsDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Material(
-              elevation: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: IconButton(
-                      alignment: Alignment.centerLeft,
-                      onPressed: () {
-                        if (widget.controller.hasClients) {
-                          widget.controller.animateToPage(0,
-                              duration: Duration(milliseconds: 400),
-                              curve: Curves.easeInOut);
-                        }
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: widget.llMode,
-                      )),
-                ),
-              ),
-            ),
             Expanded(
               child: RawScrollbar(
                 interactive: true,
                 thumbColor: widget.llMode,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40.w),
+                  padding: EdgeInsets.symmetric(horizontal: 30.w),
                   child: FutureBuilder<List<TimeModel>>(
                     future: Timedb.instance.getllTime(widget.ll),
                     builder: (context, snapshot) {
@@ -296,7 +301,7 @@ class _StatsDetailState extends State<StatsDetail> {
                 time.time.toString(),
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 13.sp,
+                    fontSize: 15.sp,
                     color: Theme.of(context).scaffoldBackgroundColor),
               )),
             ),

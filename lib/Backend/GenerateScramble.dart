@@ -109,25 +109,36 @@ class GenerateScramble {
   }
 
   static String modify(String alg) {
-    const r = ["y", "y'", "y2"];
-    String r1 = r[Random().nextInt(r.length)];
-    String r2 = r[Random().nextInt(r.length)];
-    r2 = r[Random().nextInt(r.length)];
-    String alg1 = rotate(alg, r1);
-    String alg2 = rotate(alg, r2);
-    int d1 = 0;
-    int d2 = 0;
+    String alg1 = rotate(alg, "y2");
+    String alg2 = rotate(alg, "y");
+    String alg3 = rotate(alg, "y'");
+    int b1 = 0;
+    int b2 = 0;
+    int b3 = 0;
     for (var element in alg1.runes) {
-      if (element == 'D'.codeUnitAt(0)) {
-        d1++;
+      if (element == 'B'.codeUnitAt(0)) {
+        b1++;
       }
     }
     for (var element in alg2.runes) {
-      if (element == 'D'.codeUnitAt(0)) {
-        d2++;
+      if (element == 'B'.codeUnitAt(0)) {
+        b2++;
       }
     }
-    return inverse(d1 > d2 ? alg2 : alg1);
+    for (var element in alg3.runes) {
+      if (element == 'B'.codeUnitAt(0)) {
+        b3++;
+      }
+    }
+    if (min(min(b1, b1), b3) > min(alg.split(" ").length / 3, 8)) {
+      return inverse(alg);
+    }
+    List<String> valid = [alg];
+    if (b1 < min(alg.split(" ").length / 3, 8)) valid.add(alg1);
+    if (b2 < min(alg.split(" ").length / 3, 8)) valid.add(alg2);
+    if (b3 < min(alg.split(" ").length / 3, 8)) valid.add(alg3);
+    String randalg = valid[Random().nextInt(valid.length)];
+    return inverse(randalg);
   }
 
   static String rotate(String alg, String side) {
@@ -164,7 +175,7 @@ class GenerateScramble {
           }
         }
         return rAlg.toString();
-      default:
+      case "y2":
         StringBuffer rAlg = StringBuffer();
         for (var element in alg.runes) {
           if (element == 'F'.codeUnitAt(0)) {
@@ -180,6 +191,8 @@ class GenerateScramble {
           }
         }
         return rAlg.toString();
+      default:
+        return alg;
     }
   }
 

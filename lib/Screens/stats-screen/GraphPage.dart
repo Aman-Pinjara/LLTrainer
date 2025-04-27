@@ -26,7 +26,7 @@ class _GraphPageState extends State<GraphPage> {
   @override
   Widget build(BuildContext context) {
     final Color grey =
-        Theme.of(context).colorScheme.onSecondary.withOpacity(0.6);
+        Theme.of(context).colorScheme.onSecondary;
     final TextStyle unselected = TextStyle(
       color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
       fontWeight: FontWeight.w500,
@@ -40,15 +40,16 @@ class _GraphPageState extends State<GraphPage> {
     double maxy = times.fold<double>(
         0,
         (previousValue, element) =>
-            element > previousValue ? element : previousValue);
+            max(element, previousValue));
     if (maxy % 5 != 0) {
       maxy = maxy.toInt() + 1;
     }
     int i = 0;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: widget.modeColor,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: widget.modeColor),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).scaffoldBackgroundColor,),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -56,7 +57,7 @@ class _GraphPageState extends State<GraphPage> {
         title: Text(
           "Graph",
           style: TextStyle(
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
         ),
         elevation: 1,
@@ -107,6 +108,7 @@ class _GraphPageState extends State<GraphPage> {
                                     selectedD = value!;
                                   });
                                 },
+                                iconEnabledColor: Theme.of(context).primaryColorDark,
                                 items: [
                                   DropdownMenuItem(
                                     enabled: widget.graphData.length >= 1000,
@@ -182,14 +184,6 @@ class _GraphPageState extends State<GraphPage> {
                               horizontal: 12.w, vertical: 26.h),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.r),
-                            boxShadow: const [
-                              BoxShadow(
-                                offset: Offset(1, 1),
-                                spreadRadius: -12,
-                                blurRadius: 32,
-                                color: Color.fromRGBO(161, 161, 161, 0.48),
-                              ),
-                            ],
                             color: Theme.of(context).scaffoldBackgroundColor,
                           ),
                           child: BarChart(
@@ -207,8 +201,7 @@ class _GraphPageState extends State<GraphPage> {
                                       barRods: [
                                         BarChartRodData(
                                           toY: e,
-                                          color: widget.modeColor
-                                              .withOpacity(0.75),
+                                          color: widget.modeColor,
                                           width: 20.w,
                                           borderRadius: BorderRadius.vertical(
                                             top: Radius.circular(12.r),
@@ -295,8 +288,7 @@ class _GraphPageState extends State<GraphPage> {
   }
 
   void avg(List<double> times) {
-    var rev = widget.graphData.reversed
-        .toList()
+    var rev = widget.graphData
         .getRange(0, min(selectedD, widget.graphData.length))
         .toList();
     int num = selectedD ~/ 10;
