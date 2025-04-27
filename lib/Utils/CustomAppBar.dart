@@ -30,6 +30,7 @@ class CustomAppBar extends StatelessWidget {
           physics: BouncingScrollPhysics(),
           slivers: [
             SliverAppBar(
+              scrolledUnderElevation: 0,
               backgroundColor: appBarColor,
               leading: leading,
               actions: actions,
@@ -40,7 +41,7 @@ class CustomAppBar extends StatelessWidget {
                 title: Text(
                   titleText,
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary),
+                      color: Theme.of(context).scaffoldBackgroundColor),
                 ),
                 background: Container(
                   decoration: BoxDecoration(
