@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -209,7 +211,11 @@ class ZBLLStatTile extends StatelessWidget {
                   .toStringAsFixed(2)
               : "--:--",
           best: statlist.isNotEmpty
-              ? statlist[statlist.length - 1].time.toStringAsFixed(2)
+              ? (statlist.fold<double>(
+                          double.infinity,
+                          (previousValue, element) =>
+                              min(previousValue, element.time)) /
+                      statlist.length).toStringAsFixed(2)
               : "--:--",
         );
         times.add(element);

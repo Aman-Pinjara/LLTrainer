@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, must_be_immutable, camel_case_types
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lltrainer/Models/TimeModel.dart';
@@ -59,7 +61,7 @@ class _LLBasicStatListState extends State<LLBasicStatList> {
         titleText: "All ${widget.ll}",
         leading: IconButton(
           icon: Icon(Icons.arrow_back,
-              color: Theme.of(context).colorScheme.onSecondary),
+              color: Theme.of(context).scaffoldBackgroundColor),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -139,7 +141,11 @@ class _LLBasicStatListState extends State<LLBasicStatList> {
                   .toStringAsFixed(2)
               : "--:--",
           best: statlist.isNotEmpty
-              ? statlist[statlist.length - 1].time.toStringAsFixed(2)
+              ? (statlist.fold<double>(
+                          double.infinity,
+                          (previousValue, element) =>
+                              min(previousValue, element.time)))
+                  .toStringAsFixed(2)
               : "--:--",
         );
         times.add(element);
@@ -163,9 +169,12 @@ class _LLBasicStatListState extends State<LLBasicStatList> {
                     statlist.length
                 : 0;
             double temp = statlist.isNotEmpty
-                ? statlist[statlist.length - 1].time
+                ? statlist.fold<double>(
+                          double.infinity,
+                          (previousValue, element) =>
+                              min(previousValue, element.time))
                 : double.infinity;
-            best = (temp < best) ? temp : best;
+            best = min(temp, best);
           }
         }
         final element = LLViewModel(
