@@ -56,189 +56,183 @@ class _TimerWidgetState extends State<TimerWidget> {
       Theme.of(context).colorScheme.primaryContainer,
     ];
     int curMode = Provider.of<LastLayerProvider>(context).curMode;
-    return Expanded(
-      child: GestureDetector(
-        onLongPressDown: (details) {
-          if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
-                  .timeron &&
-              !viewTaped) {
-            setState(() {
-              timerColor = 1;
-            });
-          }
-          if (viewTaped) viewTaped = false;
-        },
-        onLongPressCancel: () {
-          if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
-              .timeron) {
-            setState(() {
-              timerColor = 0;
-            });
-          }
-        },
-        onTapCancel: () {
-          if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
-              .timeron) {
-            setState(() {
-              timerColor = 0;
-            });
-          }
-        },
-        onPanCancel: () {
-          if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
-              .timeron) {
-            setState(() {
-              timerColor = 0;
-            });
-          }
-        },
-        onTap: () async {
-          //stop timer if started
-          if (Provider.of<TimerScreenStateProvider>(context, listen: false)
-              .timeron) {
-            setState(() {
-              time.stop();
-            });
-            String ll =
-                Provider.of<LastLayerProvider>(context, listen: false).ll;
-            toDeleteId = await Timedb.instance.insertInDB(
-              TimeModel(
-                lltype: ll,
-                llcase: (Provider.of<CurrentScrambleProvider>(context,
-                            listen: false)
-                        .scramble!)
-                    .llcase,
-                time: double.parse(
-                    (time.elapsedMilliseconds / 1000).toStringFixed(2)),
-              ),
-            );
-            await Provider.of<CurrentScrambleProvider>(context, listen: false)
-                .updateScramble(context);
-          }
-        },
-        onLongPress: () {
-          //change timer color to green
-          if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
-              .timeron) {
-            setState(() {
-              Provider.of<LockScrollProvider>(context, listen: false)
-                  .changeScroll(lock: true);
-              timerColor = 2;
-              Provider.of<TimerScreenStateProvider>(context, listen: false)
-                  .updateTimeron(true);
-            });
-
-            time.reset();
-          }
-        },
-        onLongPressUp: () {
-          //start timer
-          if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
-              .timerStarted) {
-            setState(() {
-              timerColor = 0;
-              time.start();
-            });
+    return GestureDetector(
+      onLongPressDown: (details) {
+        if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
+                .timeron &&
+            !viewTaped) {
+          setState(() {
+            timerColor = 1;
+          });
+        }
+        if (viewTaped) viewTaped = false;
+      },
+      onLongPressCancel: () {
+        if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
+            .timeron) {
+          setState(() {
+            timerColor = 0;
+          });
+        }
+      },
+      onTapCancel: () {
+        if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
+            .timeron) {
+          setState(() {
+            timerColor = 0;
+          });
+        }
+      },
+      onPanCancel: () {
+        if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
+            .timeron) {
+          setState(() {
+            timerColor = 0;
+          });
+        }
+      },
+      onTap: () async {
+        //stop timer if started
+        if (Provider.of<TimerScreenStateProvider>(context, listen: false)
+            .timeron) {
+          setState(() {
+            time.stop();
+          });
+          String ll = Provider.of<LastLayerProvider>(context, listen: false).ll;
+          toDeleteId = await Timedb.instance.insertInDB(
+            TimeModel(
+              lltype: ll,
+              llcase:
+                  (Provider.of<CurrentScrambleProvider>(context, listen: false)
+                          .scramble!)
+                      .llcase,
+              time: double.parse(
+                  (time.elapsedMilliseconds / 1000).toStringFixed(2)),
+            ),
+          );
+          await Provider.of<CurrentScrambleProvider>(context, listen: false)
+              .updateScramble(context);
+        }
+      },
+      onLongPress: () {
+        //change timer color to green
+        if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
+            .timeron) {
+          setState(() {
+            Provider.of<LockScrollProvider>(context, listen: false)
+                .changeScroll(lock: true);
+            timerColor = 2;
             Provider.of<TimerScreenStateProvider>(context, listen: false)
-                .updateTimerStarted(true);
-            Timer.periodic(const Duration(milliseconds: 100), (t) {
-              if (time.elapsedMilliseconds < 60000 && time.isRunning) {
-                setState(() {});
-              } else {
-                time.stop();
-                Provider.of<TimerScreenStateProvider>(context, listen: false)
-                    .updateTimerStarted(false);
-                t.cancel();
-                Provider.of<LockScrollProvider>(context, listen: false)
-                    .changeScroll(
-                        lock: Provider.of<LockScrollProvider>(context,
-                                listen: false)
-                            .isLockedByUser);
-                Provider.of<TimerScreenStateProvider>(context, listen: false)
-                    .updateTimeron(false);
-              }
-            });
-          }
-        },
-        child: Container(
-          decoration:
-              BoxDecoration(border: Border.all(color: Colors.transparent)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 20.h),
-                child: Center(
-                  child: Text(
-                    Provider.of<TimerScreenStateProvider>(context).timeron
-                        ? (time.elapsedMilliseconds / 1000).toStringAsFixed(1)
-                        : (time.elapsedMilliseconds / 1000).toStringAsFixed(3),
-                    style: TextStyle(
-                      fontSize: 60.sp,
-                      fontWeight: FontWeight.bold,
-                      color: textcolors[timerColor],
-                    ),
+                .updateTimeron(true);
+          });
+
+          time.reset();
+        }
+      },
+      onLongPressUp: () {
+        //start timer
+        if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
+            .timerStarted) {
+          setState(() {
+            timerColor = 0;
+            time.start();
+          });
+          Provider.of<TimerScreenStateProvider>(context, listen: false)
+              .updateTimerStarted(true);
+          Timer.periodic(const Duration(milliseconds: 100), (t) {
+            if (time.elapsedMilliseconds < 60000 && time.isRunning) {
+              setState(() {});
+            } else {
+              time.stop();
+              Provider.of<TimerScreenStateProvider>(context, listen: false)
+                  .updateTimerStarted(false);
+              t.cancel();
+              Provider.of<LockScrollProvider>(context, listen: false)
+                  .changeScroll(
+                      lock: Provider.of<LockScrollProvider>(context,
+                              listen: false)
+                          .isLockedByUser);
+              Provider.of<TimerScreenStateProvider>(context, listen: false)
+                  .updateTimeron(false);
+            }
+          });
+        }
+      },
+      child: Container(
+        decoration:
+            BoxDecoration(border: Border.all(color: Colors.transparent)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 20.h),
+              child: Center(
+                child: Text(
+                  Provider.of<TimerScreenStateProvider>(context).timeron
+                      ? (time.elapsedMilliseconds / 1000).toStringAsFixed(1)
+                      : (time.elapsedMilliseconds / 1000).toStringAsFixed(3),
+                  style: TextStyle(
+                    fontSize: 60.sp,
+                    fontWeight: FontWeight.bold,
+                    color: textcolors[timerColor],
                   ),
                 ),
               ),
-              Visibility(
-                maintainSize: false,
-                maintainState: true,
-                maintainAnimation: true,
-                visible:
-                    !Provider.of<TimerScreenStateProvider>(context).timeron,
-                child: FutureBuilder<String>(
-                    future: getxavg(_ModeName[curMode], 10),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return timesView(curMode, "Avg 10: ", snapshot.data!);
-                      }
-                      if (snapshot.hasError) {
-                        return Text("error");
-                      }
-                      return timesView(curMode, "Avg 10: ", "Loading");
-                    }),
+            ),
+            Visibility(
+              maintainSize: false,
+              maintainState: true,
+              maintainAnimation: true,
+              visible: !Provider.of<TimerScreenStateProvider>(context).timeron,
+              child: FutureBuilder<String>(
+                  future: getxavg(_ModeName[curMode], 10),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return timesView(curMode, "Avg 10: ", snapshot.data!);
+                    }
+                    if (snapshot.hasError) {
+                      return Text("error");
+                    }
+                    return timesView(curMode, "Avg 10: ", "Loading");
+                  }),
+            ),
+            Visibility(
+              maintainSize: false,
+              maintainState: true,
+              maintainAnimation: true,
+              visible: !Provider.of<TimerScreenStateProvider>(context).timeron,
+              child: FutureBuilder<String>(
+                  future: getxavg(_ModeName[curMode], 20),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return timesView(
+                        curMode,
+                        "Avg 20: ",
+                        snapshot.data!,
+                      );
+                    }
+                    if (snapshot.hasError) {
+                      return Text("error");
+                    }
+                    return timesView(curMode, "Avg 20: ", "Loading");
+                  }),
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            Visibility(
+              maintainSize: false,
+              maintainState: true,
+              maintainAnimation: true,
+              visible: !Provider.of<TimerScreenStateProvider>(context).timeron,
+              child: GestureDetector(
+                onLongPressDown: (_) {
+                  viewTaped = true;
+                },
+                child: prevActionButtons(curMode, context),
               ),
-              Visibility(
-                maintainSize: false,
-                maintainState: true,
-                maintainAnimation: true,
-                visible:
-                    !Provider.of<TimerScreenStateProvider>(context).timeron,
-                child: FutureBuilder<String>(
-                    future: getxavg(_ModeName[curMode], 20),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return timesView(
-                          curMode,
-                          "Avg 20: ",
-                          snapshot.data!,
-                        );
-                      }
-                      if (snapshot.hasError) {
-                        return Text("error");
-                      }
-                      return timesView(curMode, "Avg 20: ", "Loading");
-                    }),
-              ),
-              SizedBox(
-                height: 20.h,
-              ),
-              Visibility(
-                maintainSize: false,
-                maintainState: true,
-                maintainAnimation: true,
-                visible:
-                    !Provider.of<TimerScreenStateProvider>(context).timeron,
-                child: GestureDetector(
-                  onLongPressDown: (_) {
-                    viewTaped = true;
-                  },
-                  child: prevActionButtons(curMode, context),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

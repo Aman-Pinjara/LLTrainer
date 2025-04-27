@@ -63,13 +63,13 @@ class _TimerScreenState extends State<TimerScreen> {
             Expanded(
               child: Stack(
                 children: [
-                  TimerWidget(),
+                  Positioned.fill(child: TimerWidget()),
                   Positioned(
                     top: 3,
                     right: 0,
                     child: Visibility(
-                      visible:
-                          !Provider.of<TimerScreenStateProvider>(context).timeron,
+                      visible: !Provider.of<TimerScreenStateProvider>(context)
+                          .timeron,
                       child: lockIcon(context),
                     ),
                   )
