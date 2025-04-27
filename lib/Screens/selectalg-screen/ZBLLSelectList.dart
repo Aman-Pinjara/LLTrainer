@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../../Utils/CustomCircularLoader.dart';
 import 'tiles/zbllselecttile.dart';
 
+// ignore: must_be_immutable
 class ZBLLSelectList extends StatelessWidget {
   final PageController controller;
   Map<String, List<SelectionModel>> llTypeCases = {};
