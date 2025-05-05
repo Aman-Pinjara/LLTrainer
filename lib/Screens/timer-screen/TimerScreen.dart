@@ -118,7 +118,10 @@ class _TimerScreenState extends State<TimerScreen> {
                     msg: "Unlock the UI by holding the alg button");
               }
             },
-            icon: Icon(LucideIcons.penLine),
+            icon: Icon(
+              LucideIcons.penLine,
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
             iconSize: 30.sp,
           ),
           SizedBox(
@@ -149,7 +152,7 @@ class _TimerScreenState extends State<TimerScreen> {
                 padding: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: Colors.black.withOpacity(0.5), width: 0.5),
+                      color: Colors.transparent, width: 0),
                   color: _Mode[curMode].withOpacity(1),
                   borderRadius: BorderRadius.all(Radius.circular(25.r)),
                 ),
@@ -185,7 +188,10 @@ class _TimerScreenState extends State<TimerScreen> {
                     msg: "Unlock the UI by holding the alg button");
               }
             },
-            icon: Icon(LucideIcons.chartLine),
+            icon: Icon(
+              LucideIcons.chartLine,
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
             iconSize: 30.sp,
           ),
         ],
