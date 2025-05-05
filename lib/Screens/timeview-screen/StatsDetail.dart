@@ -140,8 +140,7 @@ class _StatsDetailState extends State<StatsDetail> {
                       offset: Offset(0, 0), // changes position of shadow
                     ),
                   ],
-                  border: Border.all(
-                      color: Colors.black.withOpacity(0.5), width: 0.5),
+                  border: Border.all(color: Colors.transparent, width: 0),
                   color: widget.llMode.withOpacity(1),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(25.r),

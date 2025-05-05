@@ -57,15 +57,19 @@ class _TimerWidgetState extends State<TimerWidget> {
     ];
     int curMode = Provider.of<LastLayerProvider>(context).curMode;
     return GestureDetector(
-      onLongPressDown: (details) {
-        if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
-                .timeron &&
-            !viewTaped) {
+      onLongPressDown: (details) async {
+        final timerOn =
+            Provider.of<TimerScreenStateProvider>(context, listen: false)
+                .timeron;
+        if (!timerOn && !viewTaped) {
           setState(() {
             timerColor = 1;
           });
         }
         if (viewTaped) viewTaped = false;
+        if (timerOn) {
+          await _stopTimer(context);
+        }
       },
       onLongPressCancel: () {
         if (!Provider.of<TimerScreenStateProvider>(context, listen: false)
@@ -89,29 +93,6 @@ class _TimerWidgetState extends State<TimerWidget> {
           setState(() {
             timerColor = 0;
           });
-        }
-      },
-      onTap: () async {
-        //stop timer if started
-        if (Provider.of<TimerScreenStateProvider>(context, listen: false)
-            .timeron) {
-          setState(() {
-            time.stop();
-          });
-          String ll = Provider.of<LastLayerProvider>(context, listen: false).ll;
-          toDeleteId = await Timedb.instance.insertInDB(
-            TimeModel(
-              lltype: ll,
-              llcase:
-                  (Provider.of<CurrentScrambleProvider>(context, listen: false)
-                          .scramble!)
-                      .llcase,
-              time: double.parse(
-                  (time.elapsedMilliseconds / 1000).toStringFixed(2)),
-            ),
-          );
-          await Provider.of<CurrentScrambleProvider>(context, listen: false)
-              .updateScramble(context);
         }
       },
       onLongPress: () {
@@ -236,6 +217,24 @@ class _TimerWidgetState extends State<TimerWidget> {
         ),
       ),
     );
+  }
+
+  Future<void> _stopTimer(BuildContext context) async {
+    setState(() {
+      time.stop();
+    });
+    String ll = Provider.of<LastLayerProvider>(context, listen: false).ll;
+    toDeleteId = await Timedb.instance.insertInDB(
+      TimeModel(
+        lltype: ll,
+        llcase: (Provider.of<CurrentScrambleProvider>(context, listen: false)
+                .scramble!)
+            .llcase,
+        time: double.parse((time.elapsedMilliseconds / 1000).toStringFixed(2)),
+      ),
+    );
+    await Provider.of<CurrentScrambleProvider>(context, listen: false)
+        .updateScramble(context);
   }
 
   Row prevActionButtons(int curMode, BuildContext context) {
